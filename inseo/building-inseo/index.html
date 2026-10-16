@@ -1,0 +1,149 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Building InSEO: An MVP Chrome Extension | ShoutEx</title>
+<meta name="description" content="How ShoutEx scoped InSEO as a lean MVP: what went into version 1, how the extension works and the UX decisions behind the popup.">
+<link rel="canonical" href="https://shoutex.github.io/inseo/building-inseo/">
+<link rel="icon" href="../favicon.ico" sizes="any">
+<link rel="apple-touch-icon" href="../assets/images/apple-touch-icon.png">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Building InSEO: An MVP Chrome Extension | ShoutEx">
+<meta property="og:description" content="How ShoutEx scoped InSEO as a lean MVP: what went into version 1, how the extension works and the UX decisions behind the popup.">
+<meta property="og:url" content="https://shoutex.github.io/inseo/building-inseo/">
+<meta property="og:site_name" content="ShoutEx InSEO">
+<meta property="og:image" content="https://shoutex.github.io/inseo/assets/images/shoutex-inseo-icon-512.png">
+<meta name="twitter:card" content="summary">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://guides.shoutex.com/assets/guides.css">
+<link rel="stylesheet" href="../assets/inseo.css">
+<script src="https://guides.shoutex.com/assets/includes.js" defer></script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "Organization", "@id": "https://shoutex.com/#org", "name": "ShoutEx", "url": "https://shoutex.com/", "logo": "https://shoutex.com/shoutex/shoutex-logo.webp"}, {"@type": "SoftwareApplication", "@id": "https://shoutex.github.io/inseo/#app", "name": "ShoutEx InSEO", "applicationCategory": "BrowserApplication", "operatingSystem": "Google Chrome", "description": "A lightweight Chrome extension that scores a page's on-page SEO for up to four keywords and their synonyms.", "url": "https://shoutex.github.io/inseo/", "downloadUrl": "https://chromewebstore.google.com/detail/shoutex-inseo/lognkgbmklicmgphmdiioneegmcancbh", "image": "https://shoutex.github.io/inseo/assets/images/shoutex-inseo-icon-512.png", "publisher": {"@id": "https://shoutex.com/#org"}}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "ShoutEx InSEO", "item": "https://shoutex.github.io/inseo/"}, {"@type": "ListItem", "position": 2, "name": "Building InSEO", "item": "https://shoutex.github.io/inseo/building-inseo/"}]}, {"@type": "TechArticle", "headline": "Building InSEO: how we scoped and built an MVP Chrome extension", "description": "How ShoutEx scoped InSEO as a lean MVP: what went into version 1, how the extension works and the UX decisions behind the popup.", "mainEntityOfPage": "https://shoutex.github.io/inseo/building-inseo/", "datePublished": "2026-10-15", "dateModified": "2026-10-15", "author": {"@id": "https://shoutex.com/#org"}, "publisher": {"@id": "https://shoutex.com/#org"}, "about": {"@id": "https://shoutex.github.io/inseo/#app"}}]}</script>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-P3GVGXD');</script>
+<!-- End Google Tag Manager -->
+</head><body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-P3GVGXD" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+
+<div data-include="header"></div>
+
+<div class="layout">
+  <aside class="left">
+    <nav class="ix-docnav" aria-label="InSEO documentation">
+      <div class="ix-brand"><img src="../assets/images/shoutex-inseo-logo-red-infinity-mark-400.webp" alt="ShoutEx InSEO logo, a white infinity loop on a red pill" width="400" height="234"><div><b>ShoutEx InSEO</b><span>Documentation</span></div></div>
+      <a href="../">Overview</a><a href="../how-it-works/">How the scoring works</a><a href="../building-inseo/" aria-current="page">Building InSEO</a><a href="../roadmap/">Roadmap and 2027 beta</a>
+    </nav>
+  </aside>
+  <main>
+    <div class="eyebrow">Documentation · Development</div>
+    <h1>Building InSEO: how we scoped and built an MVP Chrome extension</h1>
+    <p class="dek">The product decisions, the simplified architecture and the UX choices behind InSEO, written for founders and teams building their own first version.</p>
+    <div class="meta">ShoutEx InSEO documentation · Updated October 2026</div>
+    <div class="breadcrumb"><a href="../">ShoutEx InSEO</a> / Building InSEO</div>
+    
+    <section id="why">
+      <h2>Why build InSEO as a Chrome extension?</h2>
+      <p>We wanted on-page checks where the work happens: on the page itself, while you write or review it. A browser extension needs no account, no crawl and no setup. You open any page, live or in staging, and get an answer in seconds. That decided the product's shape before any code was written.</p>
+    </section>
+
+    <section id="scope">
+      <h2>What went into the first version, and what waited?</h2>
+      <p>We scoped InSEO as a minimum viable product (MVP): the smallest tool that answers one question well. The question was “is this page built for my keyphrase?” Everything that did not answer it waited.</p>
+      <div class="ix-scope">
+        <div class="in"><h4>In version 1</h4><ul><li>Keyphrase scoring for up to four keywords and synonyms</li><li>Title, meta, OG, URL and heading checks</li><li>Anchor text, external links and body keyword checks</li><li>One diagnostic score with per-check detail</li><li>Zero setup, runs in the browser</li></ul></div>
+        <div class="out"><h4>Moved to later</h4><ul><li>AI recommendations and rewrites</li><li>AI search readiness checks</li><li>Accounts, history and saved reports</li><li>Site-wide crawling</li><li>Local SEO signals</li></ul></div>
+      </div>
+      <p>This is the same discipline we use with clients. Our guide to the <a href="https://guides.shoutex.com/mvp/mvp-development-process/">MVP development process</a> walks through how to scope, build and launch a first version without building the roadmap too early.</p>
+    </section>
+
+    <section id="architecture">
+      <h2>How does InSEO work under the hood?</h2>
+      <p>The simplified view below shows the three parts every page-analysis extension like InSEO needs: something that reads the page, something that scores it and something that shows the result.</p>
+      <figure class="ix-stage">
+        <div class="ix-stage-label">Simplified architecture</div>
+        <div class="ix-arch">
+          <div class="ix-layer"><small>1 · Read</small><b>Page reader</b><ul><li>Runs in the open tab</li><li>Collects title, meta, OG tags, URL</li><li>Reads headings, links, images, body text</li></ul></div>
+          <div class="ix-pipe" aria-hidden="true"><span>page data</span></div>
+          <div class="ix-layer"><small>2 · Score</small><b>Keyphrase engine</b><ul><li>Matches keywords and synonyms</li><li>Scores each check</li><li>Rolls up one on-page score</li></ul></div>
+          <div class="ix-pipe" aria-hidden="true"><span>scores</span></div>
+          <div class="ix-layer"><small>3 · Show</small><b>Popup report</b><ul><li>Overall score ring</li><li>One row per check</li><li>Expandable detail lists</li></ul></div>
+        </div>
+        <figcaption class="ix-stage-cap"><b>Why this split matters:</b> the reader and the engine stay separate, so new checks, and the planned AI Insights layer, can be added without rebuilding how pages are read.</figcaption>
+      </figure>
+    </section>
+
+    <section id="ux">
+      <h2>Which UX decisions shaped the popup?</h2>
+      <p>A popup is small. Every pixel has to earn its place, so we made a few deliberate choices.</p>
+      <div class="ix-ux">
+        <figure><span class="ix-verdict bad">Avoided</span><div class="ix-wall"><b>SEO report</b><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><figcaption><b>A wall of findings.</b> Long text reports bury the one thing to fix.</figcaption></figure>
+        <figure><span class="ix-verdict good">Chosen</span>
+          <div class="ix-popup" aria-hidden="true">
+            <div class="ix-score"><div class="ix-ring" style="--p:83"><b>83%</b></div><p><b>One score first</b>Then a row per check.</p></div>
+            <div class="ix-rows">
+              <details class="ix-row mid"><summary><span>Title</span><i class="ix-bar" style="--v:80%"></i><em class="ix-pct">80%</em></summary></details>
+              <details class="ix-row low"><summary><span>Images</span><i class="ix-bar" style="--v:0%"></i><em class="ix-pct">0%</em></summary></details>
+            </div>
+          </div>
+          <figcaption><b>Score, then rows, then detail.</b> You see the overall state, then the weakest checks, and open detail only when you need it.</figcaption></figure>
+      </div>
+      <h3>The principles behind it</h3>
+      <ol>
+        <li><b>Keyphrase first.</b> The keyphrase is the first input, because every score depends on it.</li>
+        <li><b>Percentages per check.</b> A number per row makes it obvious where to start.</li>
+        <li><b>Show what was found.</b> Lists of headings, links and domains let you verify the score instead of trusting it.</li>
+        <li><b>No setup.</b> Install, open a page, type a keyphrase. Nothing else.</li>
+      </ol>
+    </section>
+
+    <section id="lessons">
+      <h2>What would we tell another team building an MVP tool?</h2>
+      <p>Answer one question extremely well, ship it, and let real use decide what comes next. Keep a written list of what you cut, so the roadmap starts from deliberate choices rather than forgotten ideas.</p>
+      <aside class="note important" role="note"><div class="note-label">Important</div><p>The architecture above is a simplified view to explain how page-analysis extensions work. It is not a full technical specification of InSEO.</p></aside>
+    </section>
+
+    <section class="ix-beta" aria-label="Join the 2027 beta">
+      <small>Planned beta · 2027</small>
+      <h2>Get AI SEO insights before anyone else</h2>
+      <p>The AI Insights beta is planned for 2027. Tell us about the pages you optimize and we will add you to the first group of testers.</p>
+      <div class="ix-ctas"><a class="ix-btn" href="https://shoutex.com/contact">Join the beta through ShoutEx <span aria-hidden="true">→</span></a><a class="ix-btn line" href="https://chromewebstore.google.com/detail/shoutex-inseo/lognkgbmklicmgphmdiioneegmcancbh" rel="noopener">Install InSEO now</a></div>
+    </section>
+  </main>
+  <aside class="right"><div class="ix-rail">
+      <img src="../assets/images/shoutex-inseo-logo-red-infinity-mark-400.webp" alt="ShoutEx InSEO logo" width="400" height="234" loading="lazy">
+      <small>AI Insights beta, 2027</small>
+      <p>Be first to try AI SEO insights in InSEO.</p>
+      <a class="b1" href="https://shoutex.com/contact">Join the beta <span aria-hidden="true">→</span></a>
+      <a class="b2" href="https://chromewebstore.google.com/detail/shoutex-inseo/lognkgbmklicmgphmdiioneegmcancbh" rel="noopener">Add InSEO to Chrome</a>
+    </div></aside>
+</div>
+
+<footer class="ix-footer">
+  <div class="ix-footer-in">
+    <span>&copy; <span id="ix-year">2026</span> ShoutEx Digital Marketing and Development. The GitHub home of ShoutEx.</span>
+    <nav aria-label="Footer"><a href="https://shoutex.com/">shoutex.com</a><a href="https://shoutex.com/contact">Contact</a><a href="https://chromewebstore.google.com/detail/shoutex-inseo/lognkgbmklicmgphmdiioneegmcancbh" rel="noopener">InSEO on the Chrome Web Store</a></nav>
+  </div>
+<!-- Default Statcounter code for ShoutEx New
+https://www.shoutex.com -->
+<script type="text/javascript">
+var sc_project=13004247;
+var sc_invisible=1;
+var sc_security="862950b7";
+</script>
+<script type="text/javascript"
+src="https://www.statcounter.com/counter/counter.js"
+async></script>
+<noscript><div class="statcounter"><a title="website
+statistics" href="https://statcounter.com/"
+target="_blank"><img class="statcounter"
+src="https://c.statcounter.com/13004247/0/862950b7/1/"
+alt="website statistics"
+referrerPolicy="no-referrer-when-downgrade"></a></div></noscript>
+<!-- End of Statcounter Code -->
+</footer>
+<script>(function(){var y=document.getElementById('ix-year');if(y)y.textContent=new Date().getFullYear();})();</script>
+</body></html>
