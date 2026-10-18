@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en-CA">
+<head>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-P3GVGXD');</script>
+<!-- End Google Tag Manager -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kids App Privacy, Permissions and Apple App Review</title>
+<meta name="description" content="What a camera-based kids app like BriteKind needs for App Review: parental gates, camera and photo permissions, and children&#x27;s privacy.">
+<link rel="canonical" href="https://shoutex.github.io/britekind/kids-privacy-and-review/">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Kids App Privacy, Permissions and Apple App Review">
+<meta property="og:description" content="What a camera-based kids app like BriteKind needs for App Review: parental gates, camera and photo permissions, and children&#x27;s privacy.">
+<meta property="og:url" content="https://shoutex.github.io/britekind/kids-privacy-and-review/">
+<meta name="twitter:card" content="summary">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://guides.shoutex.com/assets/guides.css">
+<link rel="stylesheet" href="../assets/britekind.css">
+<script src="https://guides.shoutex.com/assets/includes.js" defer></script>
+<script type="application/ld+json">[{"@context": "https://schema.org", "@type": "Article", "headline": "Kids app privacy, permissions and App Review", "description": "What a camera-based kids app like BriteKind needs for App Review: parental gates, camera and photo permissions, and children's privacy.", "url": "https://shoutex.github.io/britekind/kids-privacy-and-review/", "datePublished": "2026-10-17", "dateModified": "2026-10-17", "inLanguage": "en-CA", "author": {"@type": "Organization", "name": "ShoutEx", "url": "https://shoutex.com"}, "publisher": {"@type": "Organization", "name": "ShoutEx", "url": "https://shoutex.com", "logo": {"@type": "ImageObject", "url": "https://shoutex.com/shoutex/shoutex-logo.webp"}}, "isPartOf": {"@type": "WebSite", "name": "BriteKind: a camera-based kids app use case", "url": "https://shoutex.github.io/britekind/"}}, {"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "BriteKind", "item": "https://shoutex.github.io/britekind/"}, {"@type": "ListItem", "position": 2, "name": "Kids privacy and App Review", "item": "https://shoutex.github.io/britekind/kids-privacy-and-review/"}]}]</script>
+</head>
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-P3GVGXD"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+<div data-include="header"></div>
+
+<div class="layout">
+  <aside class="left"><a class="home-link" href="../"><span aria-hidden="true">←</span> BriteKind guide home</a><nav class="quick" aria-label="BriteKind guide">
+    <div class="quick-title">BriteKind guide</div>
+    <a href="../">BriteKind overview</a><a href="../light-tracking/">Light tracking engine</a><a href="../kids-privacy-and-review/" aria-current="page">Kids privacy and App Review</a><a href="../app-store-optimization/">App Store optimization</a><a href="../free-play-and-subscriptions/">Free play and subscriptions</a>
+    <div class="quick-section"><div class="quick-section-title">On this page</div><a href="#review-rules">Which App Review rules apply to a kids app?</a><a href="#parent-gate">How strong should the parent gate be?</a><a href="#permissions">How should camera and photo permissions be requested?</a><a href="#coppa">Does children's privacy law apply?</a></div>
+  </nav></aside>
+
+  <main>
+    <div class="eyebrow">Kids app use case · Technical</div>
+    <h1>Kids app privacy, permissions and App Review</h1>
+    <p class="dek">A children's app that uses the camera starts with two strikes against it in review: a young audience and a sensitive permission. BriteKind's brief handles both with a parent gate, on-device processing and careful permission prompts. Here is the technical checklist.</p>
+    <div class="meta">ShoutEx Team · Updated October 2026 · Page 3 of 5</div>
+    <div class="breadcrumb"><a href="../">BriteKind</a> / Kids privacy and App Review</div>
+<section id="review-rules"><h2>Which App Review rules apply to a kids app?</h2>
+<p>Apps for young children are held to stricter rules than general apps. Apple's <a href="https://developer.apple.com/app-store/review/guidelines/" rel="noopener" target="_blank">App Review Guidelines</a> require apps in the Kids Category to keep links out of the app, purchase opportunities and other distractions behind a parental gate, and they limit third-party analytics and advertising. Plan for this in the architecture, because removing an SDK late is harder than never adding it.</p>
+<div class="table-wrap"><table class="compare"><thead><tr><th>Area</th><th>What BriteKind does</th><th>Why</th></tr></thead><tbody><tr><td>Purchases and links</td><td>Only reachable from Settings, behind the parent gate</td><td>Children should not be able to buy or leave the app</td></tr><tr><td>Rate us and feedback</td><td>Inside Settings, so also behind the gate</td><td>Both open other apps or system sheets</td></tr><tr><td>Camera frames</td><td>Analyzed in memory and discarded</td><td>No images of children are stored or sent</td></tr><tr><td>Screenshots</td><td>Off by default; turned on by a parent</td><td>Saving to Photos needs its own permission</td></tr></tbody></table></div>
+</section>
+<section id="parent-gate"><h2>How strong should the parent gate be?</h2>
+<p>The brief specifies a math question with two random numbers from 1 to 5, one wrong answer allowed and a new question after two misses. That is a clear, testable spec. Our one change would be to make the question harder: many six-year-olds can add two numbers under five, so a multiplication question or numbers written as words keeps the gate closed for the whole target age.</p>
+<figure class="bk-device-fig">
+<div class="bk-ipad" role="img" aria-label="Mock-up of the BriteKind parent gate on an iPad: a simple addition question with four answer buttons">
+ <div class="bk-screen bk-light-ui">
+  <div class="bk-logo"><span class="bk-bulb" aria-hidden="true"></span>BriteKind</div>
+  <div class="bk-gate">
+   <p class="bk-gate-k">For grown-ups</p>
+   <p class="bk-gate-q">What is 3 + 4?</p>
+   <div class="bk-gate-a"><span>6</span><span class="ok">7</span><span>8</span><span>9</span></div>
+   <p class="bk-gate-s">Answer to open Settings</p>
+  </div>
+ </div>
+</div>
+<figcaption>Mock-up of the parent gate as written in the brief: two random numbers from 1 to 5, one wrong answer allowed, new numbers after two misses.</figcaption>
+</figure>
+<p>The gate is only reachable by touch on the logo. If the flashlight lands on the logo, the app plays a click and shakes the icon but opens nothing. That small detail stops the light-driven interface from becoming a back door into settings.</p>
+</section>
+<section id="permissions"><h2>How should camera and photo permissions be requested?</h2>
+<p>BriteKind needs the camera to work at all, and the Photos library only if a parent turns screenshots on. Ask for each at the moment it is needed, with a plain explanation in the Info.plist usage strings (NSCameraUsageDescription and NSPhotoLibraryAddUsageDescription). For screenshots, request add-only access, so the app can save images without ever reading the family's photo library. Apple's WWDC session on <a href="https://developer.apple.com/videos/play/wwdc2020/10641/" rel="noopener" target="_blank">the limited Photos library</a> explains the access levels introduced in iOS 14.</p>
+<ul>
+<li><strong>Check camera access on every launch.</strong> Parents can revoke it in Settings at any time, and the brief shows a clear "access to the camera is needed" screen until it is granted.</li>
+<li><strong>Grey out Screenshot when Photos access is missing.</strong> A disabled icon is better than a button that silently fails.</li>
+<li><strong>Never ask on first launch for something optional.</strong> A Photos prompt before the child has drawn anything is a likely "Don't Allow".</li>
+</ul>
+<p>Our guide on <a href="https://guides.shoutex.com/mobile-apps/permissions/">permission prompts in mobile apps</a> covers timing and wording in more depth, including pre-prompt screens that raise acceptance.</p>
+</section>
+<section id="coppa"><h2>Does children's privacy law apply?</h2>
+<p>If an app is directed at children under 13 and collects personal information, the United States Children's Online Privacy Protection Rule applies. The FTC's <a href="https://www.ftc.gov/business-guidance/resources/childrens-online-privacy-protection-rule-six-step-compliance-plan-your-business" rel="noopener" target="_blank">six-step COPPA compliance plan</a> is a practical starting point. BriteKind's design keeps the exposure small: no accounts, no names, no images leave the device, and feedback goes by email from the parent's own mail app.</p>
+<aside class="note important" role="note"><div class="note-label">Important</div><p>This is general product guidance, not legal advice. Children's privacy rules differ by country and change over time, so have a privacy lawyer review the app and its store listing before launch.</p></aside>
+<div class="red-panel"><div class="panel-kicker">Founder rule</div><h3>Design the data you never collect.</h3><p>The easiest kids app to approve, and to defend, is the one that has nothing to leak. On-device processing and no accounts did more for BriteKind's privacy than any policy page could.</p></div>
+</section>
+    <div class="grid bk-pn"><a class="card" href="../light-tracking/"><b>Light tracking engine</b><span>The light tracking and drawing engine behind BriteKind: camera capture, bright-spot detection, smoothing, dwell selection and AirPlay.</span><em>← Previous page</em></a><a class="card" href="../app-store-optimization/"><b>App Store optimization</b><span>How BriteKind's App Store screenshots, title and preview video work, with a review of the real promo set and what we would test.</span><em>Next page →</em></a></div>
+  </main>
+
+  <aside class="right"><div data-cta="mvp"></div></aside>
+</div>
+
+<footer class="bk-foot"><p>© <span id="yr">2026</span> ShoutEx Digital Marketing and Development. The GitHub home of ShoutEx.</p>
+<nav aria-label="ShoutEx"><a href="https://shoutex.com">shoutex.com</a><a href="https://shoutex.com/contact">Contact</a></nav></footer>
+<script>
+document.getElementById("yr").textContent=new Date().getFullYear();
+document.querySelectorAll(".bk-play").forEach(function(b){b.addEventListener("click",function(){
+var f=document.createElement("iframe");f.src="https://www.youtube-nocookie.com/embed/"+b.dataset.yt+"?autoplay=1&rel=0";
+f.title="BriteKind video";f.allow="autoplay; encrypted-media; picture-in-picture";f.allowFullscreen=true;b.replaceWith(f);});});
+</script>
+<!-- Default Statcounter code for ShoutEx New
+https://www.shoutex.com -->
+<script type="text/javascript">
+var sc_project=13004247;
+var sc_invisible=1;
+var sc_security="862950b7";
+</script>
+<script type="text/javascript"
+src="https://www.statcounter.com/counter/counter.js"
+async></script>
+<noscript><div class="statcounter"><a title="website
+statistics" href="https://statcounter.com/"
+target="_blank"><img class="statcounter"
+src="https://c.statcounter.com/13004247/0/862950b7/1/"
+alt="website statistics"
+referrerPolicy="no-referrer-when-downgrade"></a></div></noscript>
+<!-- End of Statcounter Code -->
+</body>
+</html>

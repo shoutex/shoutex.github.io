@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en-CA">
+<head>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-P3GVGXD');</script>
+<!-- End Google Tag Manager -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cross-AI Attribution and Conversational Ads Measurement</title>
+<meta name="description" content="Phases 3 and 4 of the Pagezii roadmap: tracking AI referrals in GA4, parsing AI crawler logs, joining data and studying ads in AI answers.">
+<link rel="canonical" href="https://shoutex.github.io/pagezii/attribution-and-ads/">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Cross-AI Attribution and Conversational Ads Measurement">
+<meta property="og:description" content="Phases 3 and 4 of the Pagezii roadmap: tracking AI referrals in GA4, parsing AI crawler logs, joining data and studying ads in AI answers.">
+<meta property="og:url" content="https://shoutex.github.io/pagezii/attribution-and-ads/">
+<meta name="twitter:card" content="summary">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://guides.shoutex.com/assets/guides.css">
+<link rel="stylesheet" href="../assets/pagezii.css">
+<script src="https://guides.shoutex.com/assets/includes.js" defer></script>
+<script type="application/ld+json">[{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Phases 3 and 4: attribution and conversational ads", "description": "Phases 3 and 4 of the Pagezii roadmap: tracking AI referrals in GA4, parsing AI crawler logs, joining data and studying ads in AI answers.", "url": "https://shoutex.github.io/pagezii/attribution-and-ads/", "datePublished": "2026-10-17", "dateModified": "2026-10-17", "inLanguage": "en-CA", "author": {"@type": "Organization", "name": "ShoutEx", "url": "https://shoutex.com"}, "publisher": {"@type": "Organization", "name": "ShoutEx", "url": "https://shoutex.com", "logo": {"@type": "ImageObject", "url": "https://shoutex.com/shoutex/shoutex-logo.webp"}}, "isPartOf": {"@type": "WebSite", "name": "Pagezii MVP roadmap", "url": "https://shoutex.github.io/pagezii/"}}, {"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Pagezii MVP roadmap", "item": "https://shoutex.github.io/pagezii/"}, {"@type": "ListItem", "position": 2, "name": "Phases 3 and 4: Attribution and ads", "item": "https://shoutex.github.io/pagezii/attribution-and-ads/"}]}]</script>
+</head>
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-P3GVGXD"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+<div data-include="header"></div>
+
+<div class="layout">
+  <aside class="left"><a class="home-link" href="../"><span aria-hidden="true">←</span> Pagezii roadmap home</a><nav class="quick" aria-label="Pagezii roadmap">
+    <div class="quick-title">Pagezii roadmap</div>
+    <a href="../">Roadmap overview</a><a href="../visibility-collector/">Phase 1: Visibility collector</a><a href="../prompt-intelligence/">Phase 2: Prompt intelligence</a><a href="../attribution-and-ads/" aria-current="page">Phases 3 and 4: Attribution and ads</a>
+    <div class="quick-section"><div class="quick-section-title">On this page</div><a href="#referrals">Which signals show AI-driven visits today?</a><a href="#ga4">How should AI referrals be tracked in GA4?</a><a href="#logs">What can server logs add?</a><a href="#joining">How do the three signals come together?</a><a href="#ads">How should Phase 4 study conversational ads?</a></div>
+  </nav></aside>
+
+  <main>
+    <div class="eyebrow">MVP roadmap · Technical</div>
+    <h1>Phases 3 and 4: attribution and conversational ads</h1>
+    <p class="dek">Visibility matters only if it leads somewhere. Phase 3 connects AI discovery to website visits and conversions with the signals that exist today. Phase 4 adds a research module for ads that appear inside AI answers.</p>
+    <div class="meta">ShoutEx Team · Updated October 2026 · Page 4 of 4</div>
+    <div class="breadcrumb"><a href="../">Pagezii roadmap</a> / Phases 3 and 4: Attribution and ads</div>
+<section id="referrals"><h2>Which signals show AI-driven visits today?</h2>
+<p>Three signals are available now. Referral traffic from AI apps, which ChatGPT makes easier by adding a UTM source; OpenAI's <a href="https://help.openai.com/en/articles/12627856-publishers-and-developers-faq" rel="noopener" target="_blank">publishers and developers FAQ</a> confirms that ChatGPT appends utm_source=chatgpt.com to referral links. Server logs showing AI crawlers and user-triggered fetchers. And the visibility data from Phase 1, which can be joined to both by date and page.</p>
+<div class="table-wrap"><table class="compare"><thead><tr><th>Signal</th><th>Where it comes from</th><th>What it misses</th></tr></thead><tbody><tr><td>AI referral sessions</td><td>Analytics referrer and UTM source</td><td>People who read an answer, then search the brand name later</td></tr><tr><td>AI crawler and fetcher hits</td><td>Web server or CDN logs</td><td>Whether a fetch led to a mention or a visit</td></tr><tr><td>Visibility over time</td><td>Pagezii Phase 1 data</td><td>Individual users, by design</td></tr></tbody></table></div>
+</section>
+<section id="ga4"><h2>How should AI referrals be tracked in GA4?</h2>
+<p>Create a custom channel for AI assistants so these sessions stop disappearing into Referral. GA4's <a href="https://support.google.com/analytics/answer/13051316?hl=en" rel="noopener" target="_blank">custom channel groups</a> let you define a channel with a source regular expression and place it above Referral in the evaluation order.</p>
+<pre class="bk-code"><span class="pz-lang">ga4</span><code>Channel name:  AI assistants
+Condition:     Session source matches regex
+Regex:         ^(chatgpt\.com|chat\.openai\.com|perplexity\.ai|.*\.perplexity\.ai|gemini\.google\.com|copilot\.microsoft\.com|claude\.ai)$
+Order:         above Referral</code></pre>
+<p>Our guide on <a href="https://guides.shoutex.com/ai-search/track-ai-search-traffic/">tracking AI search traffic</a> covers the full GA4 setup, including reports and the referrers that change most often.</p>
+</section>
+<section id="logs"><h2>What can server logs add?</h2>
+<p>Logs show which pages AI systems fetch, which is the closest available signal to what they read. OpenAI documents its <a href="https://platform.openai.com/docs/bots" rel="noopener" target="_blank">crawlers and user agents</a>, separating training crawls from search indexing and from fetches triggered by a user's question. Google lists its <a href="https://developers.google.com/crawling/docs/crawlers-fetchers/google-common-crawlers" rel="noopener" target="_blank">common crawlers</a>, including the Google-Extended token that controls use for AI models.</p>
+<pre class="bk-code"><span class="pz-lang">python</span><code>import re
+from collections import Counter
+
+AI_AGENTS = re.compile(r&quot;(GPTBot|OAI-SearchBot|ChatGPT-User|PerplexityBot|Perplexity-User)&quot;)
+LINE = re.compile(r&#x27;&quot;(?:GET|HEAD) (?P&lt;path&gt;\S+) [^&quot;]*&quot; \d{3} \S+ &quot;[^&quot;]*&quot; &quot;(?P&lt;ua&gt;[^&quot;]*)&quot;&#x27;)
+
+def ai_fetches(log_lines):
+    hits = Counter()
+    for line in log_lines:
+        m = LINE.search(line)
+        if m and (agent := AI_AGENTS.search(m[&quot;ua&quot;])):
+            hits[(agent.group(1), m[&quot;path&quot;])] += 1
+    return hits   # join with citations.url from Phase 1 by path</code></pre>
+<aside class="note important" role="note"><div class="note-label">Important</div><p>User agents can be spoofed. Verify important crawler traffic against the IP ranges each company publishes before using it in a customer report.</p></aside>
+</section>
+<section id="joining"><h2>How do the three signals come together?</h2>
+<p>Join on page and week, not on the user. A useful first report shows, for each page: how often Phase 1 saw it cited, how often AI agents fetched it and how many AI-referred sessions and conversions it received. Read it as correlation and say so. Much AI influence is invisible: a buyer reads an answer, then types the brand into Google a day later. Pagezii's note on <a href="https://pagezii.com/blog/answer-engine-optimization-vs-seo/">where answer engine optimization and SEO differ</a> explains why last-click models undercount this channel.</p>
+<div class="red-panel"><div class="panel-kicker">CTO rule</div><h3>Report the gaps next to the numbers.</h3><p>Cross-AI attribution will never be complete. A report that names what it cannot see earns more trust than one that pretends to see everything.</p></div>
+</section>
+<section id="ads"><h2>How should Phase 4 study conversational ads?</h2>
+<p>Treat ads inside AI answers as a research module on top of Phases 1 to 3. OpenAI has described its approach to <a href="https://openai.com/index/new-chatgpt-ads-format-and-measurement/" rel="noopener" target="_blank">ad formats and measurement in ChatGPT</a>, which gives the first concrete surface to study. The questions for Pagezii are whether ad exposure changes organic mention rates for the same prompts, and whether AI-referred conversions differ between paid and organic placements.</p>
+<p>Start with logging: record when an ad appears in a collected answer, its position relative to organic recommendations and the advertiser. Our guide on <a href="https://guides.shoutex.com/chatgpt-ads/measure-leads-and-pipeline/">measuring leads and pipeline from ChatGPT ads</a> covers the advertiser side of the same measurement problem.</p>
+<aside class="note key" role="note"><div class="note-label">Key point</div><p>Phase 4 is research, not product. Ship it as a method and a published note first; build software only when the method holds up.</p></aside>
+</section>
+    <div class="grid bk-pn"><a class="card" href="../prompt-intelligence/"><b>Phase 2: Prompt intelligence</b><span>Phase 2 of the Pagezii roadmap: sourcing commercial prompts, an intent taxonomy, embedding prompts and clustering them with HDBSCAN.</span><em>← Previous page</em></a></div>
+  </main>
+
+  <aside class="right"><div data-cta="mvp"></div></aside>
+</div>
+
+<footer class="bk-foot"><p>© <span id="yr">2026</span> ShoutEx Digital Marketing and Development. The GitHub home of ShoutEx.</p>
+<nav aria-label="ShoutEx"><a href="https://shoutex.com">shoutex.com</a><a href="https://shoutex.com/contact">Contact</a></nav></footer>
+<script>
+document.getElementById("yr").textContent=new Date().getFullYear();
+document.querySelectorAll(".bk-play").forEach(function(b){b.addEventListener("click",function(){
+var f=document.createElement("iframe");f.src="https://www.youtube-nocookie.com/embed/"+b.dataset.yt+"?autoplay=1&rel=0";
+f.title="Video";f.allow="autoplay; encrypted-media; picture-in-picture";f.allowFullscreen=true;b.replaceWith(f);});});
+</script>
+<!-- Default Statcounter code for ShoutEx New
+https://www.shoutex.com -->
+<script type="text/javascript">
+var sc_project=13004247;
+var sc_invisible=1;
+var sc_security="862950b7";
+</script>
+<script type="text/javascript"
+src="https://www.statcounter.com/counter/counter.js"
+async></script>
+<noscript><div class="statcounter"><a title="website
+statistics" href="https://statcounter.com/"
+target="_blank"><img class="statcounter"
+src="https://c.statcounter.com/13004247/0/862950b7/1/"
+alt="website statistics"
+referrerPolicy="no-referrer-when-downgrade"></a></div></noscript>
+<!-- End of Statcounter Code -->
+</body>
+</html>

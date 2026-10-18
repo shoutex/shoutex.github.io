@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en-CA">
+<head>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-P3GVGXD');</script>
+<!-- End Google Tag Manager -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How BriteKind Tracks a Flashlight With the iPad Camera</title>
+<meta name="description" content="The light tracking and drawing engine behind BriteKind: camera capture, bright-spot detection, smoothing, dwell selection and AirPlay.">
+<link rel="canonical" href="https://shoutex.github.io/britekind/light-tracking/">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<meta property="og:type" content="article">
+<meta property="og:title" content="How BriteKind Tracks a Flashlight With the iPad Camera">
+<meta property="og:description" content="The light tracking and drawing engine behind BriteKind: camera capture, bright-spot detection, smoothing, dwell selection and AirPlay.">
+<meta property="og:url" content="https://shoutex.github.io/britekind/light-tracking/">
+<meta name="twitter:card" content="summary">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://guides.shoutex.com/assets/guides.css">
+<link rel="stylesheet" href="../assets/britekind.css">
+<script src="https://guides.shoutex.com/assets/includes.js" defer></script>
+<script type="application/ld+json">[{"@context": "https://schema.org", "@type": "Article", "headline": "How the light tracking and drawing engine works", "description": "The light tracking and drawing engine behind BriteKind: camera capture, bright-spot detection, smoothing, dwell selection and AirPlay.", "url": "https://shoutex.github.io/britekind/light-tracking/", "datePublished": "2026-10-17", "dateModified": "2026-10-17", "inLanguage": "en-CA", "author": {"@type": "Organization", "name": "ShoutEx", "url": "https://shoutex.com"}, "publisher": {"@type": "Organization", "name": "ShoutEx", "url": "https://shoutex.com", "logo": {"@type": "ImageObject", "url": "https://shoutex.com/shoutex/shoutex-logo.webp"}}, "isPartOf": {"@type": "WebSite", "name": "BriteKind: a camera-based kids app use case", "url": "https://shoutex.github.io/britekind/"}}, {"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "BriteKind", "item": "https://shoutex.github.io/britekind/"}, {"@type": "ListItem", "position": 2, "name": "Light tracking engine", "item": "https://shoutex.github.io/britekind/light-tracking/"}]}]</script>
+</head>
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-P3GVGXD"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+<div data-include="header"></div>
+
+<div class="layout">
+  <aside class="left"><a class="home-link" href="../"><span aria-hidden="true">←</span> BriteKind guide home</a><nav class="quick" aria-label="BriteKind guide">
+    <div class="quick-title">BriteKind guide</div>
+    <a href="../">BriteKind overview</a><a href="../light-tracking/" aria-current="page">Light tracking engine</a><a href="../kids-privacy-and-review/">Kids privacy and App Review</a><a href="../app-store-optimization/">App Store optimization</a><a href="../free-play-and-subscriptions/">Free play and subscriptions</a>
+    <div class="quick-section"><div class="quick-section-title">On this page</div><a href="#pipeline">What does the tracking pipeline look like?</a><a href="#capture">How should the app capture camera frames?</a><a href="#false-positives">How do you stop lamps and windows being tracked?</a><a href="#smoothing">How is the line kept smooth?</a><a href="#dwell">How does the child select colours without touching the screen?</a><a href="#airplay">How does the TV mode work?</a></div>
+  </nav></aside>
+
+  <main>
+    <div class="eyebrow">Kids app use case · Technical</div>
+    <h1>How the light tracking and drawing engine works</h1>
+    <p class="dek">BriteKind's core loop is simple to describe and demanding to build: find the brightest spot in every camera frame, turn those points into a smooth line and do it fast enough that the child never sees a delay. Here is how we approach each layer.</p>
+    <div class="meta">ShoutEx Team · Updated October 2026 · Page 2 of 5</div>
+    <div class="breadcrumb"><a href="../">BriteKind</a> / Light tracking engine</div>
+<section id="pipeline"><h2>What does the tracking pipeline look like?</h2>
+<p>The pipeline has five stages: capture a camera frame, find the brightest region, check it is really the flashlight, smooth the point and add it to the current stroke. Everything runs on the device, and only the drawn line is rendered on screen. Camera frames are discarded as soon as they are analyzed.</p>
+<div class="table-wrap"><table class="compare"><thead><tr><th>Stage</th><th>What it does</th><th>Main iOS building block</th></tr></thead><tbody><tr><td>1. Capture</td><td>Streams frames from the front or rear camera</td><td>AVCaptureSession with a video data output</td></tr><tr><td>2. Detect</td><td>Finds the brightest pixels in a downscaled frame</td><td>Luma (Y) plane scan, or Core Image reduction</td></tr><tr><td>3. Validate</td><td>Rejects lamps, windows and reflections</td><td>Blob size, brightness and jump-distance checks</td></tr><tr><td>4. Smooth</td><td>Removes jitter from hand movement</td><td>Exponential smoothing, then spline fitting</td></tr><tr><td>5. Render</td><td>Draws the stroke in the selected colour</td><td>Core Animation shape layers or Metal</td></tr></tbody></table></div>
+</section>
+<section id="capture"><h2>How should the app capture camera frames?</h2>
+<p>Use <a href="https://developer.apple.com/documentation/avfoundation/avcapturevideodataoutput" rel="noopener" target="_blank">AVCaptureVideoDataOutput</a> and ask for the bi-planar YUV pixel format instead of BGRA. Brightness lives in the Y plane, so the detector can read one byte per pixel and ignore colour entirely. Set the output to discard late frames, because a stale frame is worse than a skipped one when you are drawing live.</p>
+<p>Apple's technical note on <a href="https://developer.apple.com/library/archive/technotes/tn2445/_index.html" rel="noopener" target="_blank">handling frame drops with AVCaptureVideoDataOutput</a> explains why processing must finish inside the frame budget and what happens to the queue when it does not. The brief's requirement, a frame rate that is not processor intensive, is a direct consequence: tracking at 30 frames per second on a reduced image is smoother overall than trying for 60 and dropping frames.</p>
+<pre class="bk-code"><code>// Simplified: find the brightest blob in the luma plane
+let step = 4                       // sample every 4th pixel
+var sumX = 0, sumY = 0, count = 0
+for y in stride(from: 0, to: height, by: step) {
+  for x in stride(from: 0, to: width, by: step) {
+    if luma[y * rowBytes + x] &gt;= threshold {   // e.g. 240 of 255
+      sumX += x; sumY += y; count += 1
+    }
+  }
+}
+guard count &gt;= minBlobSamples else { return nil }   // ignore specks
+return CGPoint(x: Double(sumX) / Double(count),
+               y: Double(sumY) / Double(count))</code></pre>
+<p>This is the same idea as the binary thresholding covered in OpenCV's <a href="https://docs.opencv.org/4.13.0/d7/d4d/tutorial_py_thresholding.html" rel="noopener" target="_blank">image thresholding tutorial</a>, done by hand on a downscaled grid. Core Image's <a href="https://developer.apple.com/documentation/coreimage/cifilter/3547114-areamaximumfilter?language=objc" rel="noopener" target="_blank">area maximum filter</a> is an alternative when you prefer GPU reduction over a CPU loop.</p>
+</section>
+<section id="false-positives"><h2>How do you stop lamps and windows being tracked?</h2>
+<p>A flashlight is not the only bright thing in a living room. Ceiling lights, windows, TV screens and reflections all cross a brightness threshold. Three checks remove most of them: a maximum blob size (a window is huge, a flashlight beam is small), a maximum jump between frames (a hand cannot move across the room in 33 milliseconds) and a short calibration on start that records static bright areas and ignores them.</p>
+<p>This is also why the app tells families to play in a dark room. The 50% dark overlay helps the drawing stand out, but the darkness the detector needs is in the room itself.</p>
+<aside class="note important" role="note"><div class="note-label">Important</div><p>Mirror the x coordinate when the front camera is active, and convert from the camera buffer's coordinate space to the view's aspect-fill space. Most early bug reports in apps like this are lines appearing in the wrong place, not tracking failures.</p></aside>
+</section>
+<section id="smoothing"><h2>How is the line kept smooth?</h2>
+<p>Raw centroids jitter, so the engine smooths in two passes. First, an exponential moving average on each point removes hand shake. Second, the stroke is drawn as a curve through the points instead of straight segments, as the brief asks. A <a href="https://en.wikipedia.org/wiki/Catmull%E2%80%93Rom_spline" rel="noopener" target="_blank">Catmull-Rom spline</a> is a good fit because it passes through every tracked point and converts easily into the cubic Bezier segments that iOS drawing APIs expect.</p>
+<p>Keep the rendering cost flat as the drawing grows. Draw the live stroke as a shape layer, and when a stroke ends, flatten it into a bitmap layer underneath. Otherwise a long drawing session ends with thousands of path points being redrawn every frame, and the device heats up.</p>
+</section>
+<section id="dwell"><h2>How does the child select colours without touching the screen?</h2>
+<p>The dock uses dwell selection: when the light stays inside a dock target for a set time, the action fires. While the light waits, the target animates, for example a colour ring filling up or the clear icon wiggling, so the child understands that holding still is doing something. The trail is never drawn inside the dock area.</p>
+<div class="red-panel"><div class="panel-kicker">Founder rule</div><h3>Tune the dwell time with children, not with the team.</h3><p>Too short and children trigger Clear by accident and lose their drawing. Too long and they give up before a colour changes. Start near one second and adjust from real play sessions.</p></div>
+</section>
+<section id="airplay"><h2>How does the TV mode work?</h2>
+<p>The simplest version is screen mirroring over AirPlay to an Apple TV, which needs no extra code. A better version treats the TV as a second display: the iPad keeps the camera view and controls, while the TV shows a clean, full-screen canvas. Apple's WWDC session <a href="https://developer.apple.com/videos/play/wwdc2019/501/" rel="noopener" target="_blank">Reaching the Big Screen with AirPlay 2</a> covers the options and their trade-offs.</p>
+<figure class="bk-photo"><img src="../assets/images/britekind-family-tv-room-airplay-drawing.webp" alt="Family in a living room watching a large TV, the kind of setting where BriteKind drawings are mirrored to the big screen with Apple TV" width="1600" height="900" loading="lazy"><figcaption>The TV mode turns a solo game into something the whole family watches.</figcaption></figure>
+<p>The MVP was built by an outside studio from the written brief, with the code delivered in a repository for future development. Our guide on <a href="https://guides.shoutex.com/mvp/who-should-build-your-mvp/">who should build your MVP</a> covers when a studio, a freelancer or an in-house developer is the better choice, and what to put in the contract so you own the code and IP.</p>
+</section>
+    <div class="grid bk-pn"><a class="card" href="../"><b>BriteKind overview</b><span>BriteKind lets children paint on screen with a flashlight. A technical use case on scoping, building and launching a kids iOS app.</span><em>← Previous page</em></a><a class="card" href="../kids-privacy-and-review/"><b>Kids privacy and App Review</b><span>What a camera-based kids app like BriteKind needs for App Review: parental gates, camera and photo permissions, and children's privacy.</span><em>Next page →</em></a></div>
+  </main>
+
+  <aside class="right"><div data-cta="mvp"></div></aside>
+</div>
+
+<footer class="bk-foot"><p>© <span id="yr">2026</span> ShoutEx Digital Marketing and Development. The GitHub home of ShoutEx.</p>
+<nav aria-label="ShoutEx"><a href="https://shoutex.com">shoutex.com</a><a href="https://shoutex.com/contact">Contact</a></nav></footer>
+<script>
+document.getElementById("yr").textContent=new Date().getFullYear();
+document.querySelectorAll(".bk-play").forEach(function(b){b.addEventListener("click",function(){
+var f=document.createElement("iframe");f.src="https://www.youtube-nocookie.com/embed/"+b.dataset.yt+"?autoplay=1&rel=0";
+f.title="BriteKind video";f.allow="autoplay; encrypted-media; picture-in-picture";f.allowFullscreen=true;b.replaceWith(f);});});
+</script>
+<!-- Default Statcounter code for ShoutEx New
+https://www.shoutex.com -->
+<script type="text/javascript">
+var sc_project=13004247;
+var sc_invisible=1;
+var sc_security="862950b7";
+</script>
+<script type="text/javascript"
+src="https://www.statcounter.com/counter/counter.js"
+async></script>
+<noscript><div class="statcounter"><a title="website
+statistics" href="https://statcounter.com/"
+target="_blank"><img class="statcounter"
+src="https://c.statcounter.com/13004247/0/862950b7/1/"
+alt="website statistics"
+referrerPolicy="no-referrer-when-downgrade"></a></div></noscript>
+<!-- End of Statcounter Code -->
+</body>
+</html>

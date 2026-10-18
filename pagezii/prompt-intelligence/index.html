@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en-CA">
+<head>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-P3GVGXD');</script>
+<!-- End Google Tag Manager -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Prompt Intelligence: Building and Clustering Prompt Sets</title>
+<meta name="description" content="Phase 2 of the Pagezii roadmap: sourcing commercial prompts, an intent taxonomy, embedding prompts and clustering them with HDBSCAN.">
+<link rel="canonical" href="https://shoutex.github.io/pagezii/prompt-intelligence/">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Prompt Intelligence: Building and Clustering Prompt Sets">
+<meta property="og:description" content="Phase 2 of the Pagezii roadmap: sourcing commercial prompts, an intent taxonomy, embedding prompts and clustering them with HDBSCAN.">
+<meta property="og:url" content="https://shoutex.github.io/pagezii/prompt-intelligence/">
+<meta name="twitter:card" content="summary">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://guides.shoutex.com/assets/guides.css">
+<link rel="stylesheet" href="../assets/pagezii.css">
+<script src="https://guides.shoutex.com/assets/includes.js" defer></script>
+<script type="application/ld+json">[{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Phase 2: building prompt intelligence", "description": "Phase 2 of the Pagezii roadmap: sourcing commercial prompts, an intent taxonomy, embedding prompts and clustering them with HDBSCAN.", "url": "https://shoutex.github.io/pagezii/prompt-intelligence/", "datePublished": "2026-10-17", "dateModified": "2026-10-17", "inLanguage": "en-CA", "author": {"@type": "Organization", "name": "ShoutEx", "url": "https://shoutex.com"}, "publisher": {"@type": "Organization", "name": "ShoutEx", "url": "https://shoutex.com", "logo": {"@type": "ImageObject", "url": "https://shoutex.com/shoutex/shoutex-logo.webp"}}, "isPartOf": {"@type": "WebSite", "name": "Pagezii MVP roadmap", "url": "https://shoutex.github.io/pagezii/"}}, {"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Pagezii MVP roadmap", "item": "https://shoutex.github.io/pagezii/"}, {"@type": "ListItem", "position": 2, "name": "Phase 2: Prompt intelligence", "item": "https://shoutex.github.io/pagezii/prompt-intelligence/"}]}]</script>
+</head>
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-P3GVGXD"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+<div data-include="header"></div>
+
+<div class="layout">
+  <aside class="left"><a class="home-link" href="../"><span aria-hidden="true">←</span> Pagezii roadmap home</a><nav class="quick" aria-label="Pagezii roadmap">
+    <div class="quick-title">Pagezii roadmap</div>
+    <a href="../">Roadmap overview</a><a href="../visibility-collector/">Phase 1: Visibility collector</a><a href="../prompt-intelligence/" aria-current="page">Phase 2: Prompt intelligence</a><a href="../attribution-and-ads/">Phases 3 and 4: Attribution and ads</a>
+    <div class="quick-section"><div class="quick-section-title">On this page</div><a href="#sources">Where do realistic prompts come from?</a><a href="#taxonomy">How should prompts be classified?</a><a href="#clustering">How are prompts grouped automatically?</a><a href="#drift">How do you keep the library current?</a></div>
+  </nav></aside>
+
+  <main>
+    <div class="eyebrow">MVP roadmap · Technical</div>
+    <h1>Phase 2: building prompt intelligence</h1>
+    <p class="dek">Visibility numbers are only as meaningful as the prompts behind them. Phase 2 builds a prompt library that reflects how buyers actually ask AI systems for help, then groups prompts so results can be read by intent instead of one prompt at a time.</p>
+    <div class="meta">ShoutEx Team · Updated October 2026 · Page 3 of 4</div>
+    <div class="breadcrumb"><a href="../">Pagezii roadmap</a> / Phase 2: Prompt intelligence</div>
+<section id="sources"><h2>Where do realistic prompts come from?</h2>
+<p>There is no public prompt-volume data comparable to keyword search volume, so the library has to be assembled from proxies. Good sources are keyword research converted into natural questions, sales and support call notes, community threads where buyers ask for recommendations, and comparison pages competitors already rank for. Pagezii's note on <a href="https://pagezii.com/blog/prompt-intelligence-explained/">what prompt intelligence is</a> explains why questions behave differently from keywords.</p>
+<p>Our guide on <a href="https://guides.shoutex.com/ai-search/how-buyers-use-ai-search/">how buyers use AI search</a> lists the question patterns B2B buyers use most, which makes a practical starting taxonomy.</p>
+</section>
+<section id="taxonomy"><h2>How should prompts be classified?</h2>
+<p>Classify every prompt by commercial intent, because a mention in a "best tools for" answer is worth more than one in a definition. A small, fixed taxonomy beats a clever one: marketers have to recognize the labels.</p>
+<div class="table-wrap"><table class="compare"><thead><tr><th>Intent</th><th>Example prompt</th><th>What a mention means</th></tr></thead><tbody><tr><td>Category</td><td>What are the best CRM tools for a 10-person sales team?</td><td>The brand is in the consideration set</td></tr><tr><td>Comparison</td><td>HubSpot vs Pipedrive for a startup</td><td>The brand is being evaluated head to head</td></tr><tr><td>Alternative</td><td>Cheaper alternatives to Salesforce</td><td>The brand can win switchers</td></tr><tr><td>Problem-led</td><td>How do I stop leads going cold after a demo?</td><td>The brand is linked to a problem, not only a category</td></tr><tr><td>Persona</td><td>Which analytics tool should a solo founder use?</td><td>The brand fits a specific buyer</td></tr></tbody></table></div>
+</section>
+<section id="clustering"><h2>How are prompts grouped automatically?</h2>
+<p>Embed every prompt, store the vectors in PostgreSQL with <a href="https://github.com/pgvector/pgvector" rel="noopener" target="_blank">pgvector</a>, and cluster them with <a href="https://scikit-learn.org/stable/modules/generated/sklearn.cluster.HDBSCAN.html" rel="noopener" target="_blank">HDBSCAN</a>. HDBSCAN suits this job because it does not need the number of clusters in advance and leaves outliers unassigned instead of forcing them into the nearest group. OpenAI's <a href="https://platform.openai.com/docs/guides/embeddings" rel="noopener" target="_blank">embeddings guide</a> covers model choice and dimensions.</p>
+<pre class="bk-code"><span class="pz-lang">python</span><code>import numpy as np
+from openai import OpenAI
+from sklearn.cluster import HDBSCAN
+
+client = OpenAI()
+
+def embed(texts: list[str], model: str) -&gt; np.ndarray:
+    resp = client.embeddings.create(model=model, input=texts)
+    return np.array([d.embedding for d in resp.data])
+
+def cluster_prompts(prompts: list[str], model: str) -&gt; list[int]:
+    X = embed(prompts, model)
+    X = X / np.linalg.norm(X, axis=1, keepdims=True)   # cosine via unit vectors
+    labels = HDBSCAN(min_cluster_size=5).fit_predict(X)
+    return labels.tolist()                              # -1 = unclustered</code></pre>
+<pre class="bk-code"><span class="pz-lang">sql</span><code>create extension if not exists vector;
+alter table prompts add column embedding vector(1536);  -- match your model
+alter table prompts add column cluster_id int;
+
+-- Nearest prompts to a new question, for de-duplication
+select id, text
+from prompts
+order by embedding &lt;=&gt; :new_embedding
+limit 10;</code></pre>
+<aside class="note hint" role="note"><div class="note-label">Hint</div><p>Have a human name every cluster before it appears in a report. An automatic label like cluster 17 means nothing to a customer; a name like CRM for small sales teams does.</p></aside>
+</section>
+<section id="drift"><h2>How do you keep the library current?</h2>
+<p>Treat the prompt library as versioned data. Add prompts in batches, re-cluster on a schedule, and never edit a prompt in place, because that silently breaks its history. Retire prompts instead and keep their runs. When a new batch lands, check it against existing prompts with a nearest-neighbour query so near-duplicates do not inflate a cluster's weight.</p>
+<div class="red-panel"><div class="panel-kicker">CTO rule</div><h3>Version the prompts, not just the code.</h3><p>A change in visibility is only meaningful if the prompt set stayed the same. Tag every report with the prompt library version it used.</p></div>
+</section>
+    <div class="grid bk-pn"><a class="card" href="../visibility-collector/"><b>Phase 1: Visibility collector</b><span>Phase 1 of the Pagezii roadmap: collecting AI answers by API, storing raw responses, parsing brand mentions and citations, and metric SQL.</span><em>← Previous page</em></a><a class="card" href="../attribution-and-ads/"><b>Phases 3 and 4: Attribution and ads</b><span>Phases 3 and 4 of the Pagezii roadmap: tracking AI referrals in GA4, parsing AI crawler logs, joining data and studying ads in AI answers.</span><em>Next page →</em></a></div>
+  </main>
+
+  <aside class="right"><div data-cta="mvp"></div></aside>
+</div>
+
+<footer class="bk-foot"><p>© <span id="yr">2026</span> ShoutEx Digital Marketing and Development. The GitHub home of ShoutEx.</p>
+<nav aria-label="ShoutEx"><a href="https://shoutex.com">shoutex.com</a><a href="https://shoutex.com/contact">Contact</a></nav></footer>
+<script>
+document.getElementById("yr").textContent=new Date().getFullYear();
+document.querySelectorAll(".bk-play").forEach(function(b){b.addEventListener("click",function(){
+var f=document.createElement("iframe");f.src="https://www.youtube-nocookie.com/embed/"+b.dataset.yt+"?autoplay=1&rel=0";
+f.title="Video";f.allow="autoplay; encrypted-media; picture-in-picture";f.allowFullscreen=true;b.replaceWith(f);});});
+</script>
+<!-- Default Statcounter code for ShoutEx New
+https://www.shoutex.com -->
+<script type="text/javascript">
+var sc_project=13004247;
+var sc_invisible=1;
+var sc_security="862950b7";
+</script>
+<script type="text/javascript"
+src="https://www.statcounter.com/counter/counter.js"
+async></script>
+<noscript><div class="statcounter"><a title="website
+statistics" href="https://statcounter.com/"
+target="_blank"><img class="statcounter"
+src="https://c.statcounter.com/13004247/0/862950b7/1/"
+alt="website statistics"
+referrerPolicy="no-referrer-when-downgrade"></a></div></noscript>
+<!-- End of Statcounter Code -->
+</body>
+</html>

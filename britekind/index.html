@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en-CA">
+<head>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-P3GVGXD');</script>
+<!-- End Google Tag Manager -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BriteKind: Building a Camera-Based Kids App for iPad</title>
+<meta name="description" content="BriteKind lets children paint on screen with a flashlight. A technical use case on scoping, building and launching a kids iOS app.">
+<link rel="canonical" href="https://shoutex.github.io/britekind/">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<meta property="og:type" content="article">
+<meta property="og:title" content="BriteKind: Building a Camera-Based Kids App for iPad">
+<meta property="og:description" content="BriteKind lets children paint on screen with a flashlight. A technical use case on scoping, building and launching a kids iOS app.">
+<meta property="og:url" content="https://shoutex.github.io/britekind/">
+<meta name="twitter:card" content="summary">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://guides.shoutex.com/assets/guides.css">
+<link rel="stylesheet" href="assets/britekind.css">
+<script src="https://guides.shoutex.com/assets/includes.js" defer></script>
+<script type="application/ld+json">[{"@context": "https://schema.org", "@type": "Article", "headline": "BriteKind: a technical use case for a camera-based kids app", "description": "BriteKind lets children paint on screen with a flashlight. A technical use case on scoping, building and launching a kids iOS app.", "url": "https://shoutex.github.io/britekind/", "datePublished": "2026-10-17", "dateModified": "2026-10-17", "inLanguage": "en-CA", "author": {"@type": "Organization", "name": "ShoutEx", "url": "https://shoutex.com"}, "publisher": {"@type": "Organization", "name": "ShoutEx", "url": "https://shoutex.com", "logo": {"@type": "ImageObject", "url": "https://shoutex.com/shoutex/shoutex-logo.webp"}}, "isPartOf": {"@type": "WebSite", "name": "BriteKind: a camera-based kids app use case", "url": "https://shoutex.github.io/britekind/"}}, {"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "BriteKind", "item": "https://shoutex.github.io/britekind/"}]}]</script>
+</head>
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-P3GVGXD"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+<div data-include="header"></div>
+
+<div class="layout">
+  <aside class="left"><a class="home-link" href="https://guides.shoutex.com/"><span aria-hidden="true">←</span> All ShoutEx guides</a><nav class="quick" aria-label="BriteKind guide">
+    <div class="quick-title">BriteKind guide</div>
+    <a href="./" aria-current="page">BriteKind overview</a><a href="light-tracking/">Light tracking engine</a><a href="kids-privacy-and-review/">Kids privacy and App Review</a><a href="app-store-optimization/">App Store optimization</a><a href="free-play-and-subscriptions/">Free play and subscriptions</a>
+    <div class="quick-section"><div class="quick-section-title">On this page</div><a href="#what-is-britekind">What is BriteKind?</a><a href="#play-screen">What does the play screen look like?</a><a href="#why-a-use-case">Why is BriteKind a useful use case for founders?</a><a href="#audience">What does designing for ages 3 to 6 change?</a><a href="#how-guide-works">How this guide is organized</a></div>
+  </nav></aside>
+
+  <main>
+    <div class="eyebrow">Kids app use case · Technical</div>
+    <h1>BriteKind: a technical use case for a camera-based kids app</h1>
+    <p class="dek">BriteKind is an iOS game that lets a child paint on the screen by waving a regular flashlight in front of the camera. This guide walks founders and product owners through how it was scoped, how the light tracking works and how to take an app like it to market.</p>
+    <div class="meta">ShoutEx Team · Updated October 2026 · Page 1 of 5</div>
+    <div class="breadcrumb">BriteKind use case</div>
+<section id="what-is-britekind"><h2>What is BriteKind?</h2>
+<p>BriteKind turns an iPad or iPhone into a light-painting canvas. The child stands in front of the camera in a dim room and moves a flashlight. The app tracks the bright spot frame by frame and draws a smooth line along its path. A dock at the bottom holds seven colours, a clear button and a screenshot button, and the whole canvas can be mirrored to a TV through Apple TV.</p>
+<figure class="bk-video">
+<button class="bk-play" type="button" data-yt="pUZhUWPdJe8" aria-label="Play the BriteKind promo video">
+<img src="https://i.ytimg.com/vi/pUZhUWPdJe8/hqdefault.jpg" alt="BriteKind promo video: a child draws on a screen by moving a flashlight in a dark room" width="480" height="360" loading="lazy">
+<span class="bk-btn" aria-hidden="true"></span></button>
+<figcaption>The BriteKind promo video. It loads from YouTube only when you press play.</figcaption>
+</figure>
+<p>The audience is children aged 3 to 6, which shapes every decision in this guide: no reading required during play, no accounts, a parent gate in front of settings and purchases, and camera frames that never leave the device.</p>
+</section>
+<section id="play-screen"><h2>What does the play screen look like?</h2>
+<p>The play screen is the whole product. The camera feed fills the screen with a 50% dark overlay so painted colours stand out. The top 90% is the drawing area, and the bottom 10% is the dock, where the light leaves no trail. The child selects a dock item by holding the light still over it, so the game can be played without touching the device.</p>
+<figure class="bk-device-fig">
+<div class="bk-ipad" role="img" aria-label="Mock-up of the BriteKind play screen on an iPad: a yellow house drawn with a flashlight over a darkened camera view, with the colour dock at the bottom">
+ <div class="bk-screen">
+  <div class="bk-cam"></div>
+  <div class="bk-logo"><span class="bk-bulb" aria-hidden="true"></span>BriteKind</div>
+  <svg class="bk-trail" viewBox="0 0 400 260" aria-hidden="true">
+   <path d="M95 200 C 95 170, 96 150, 98 128 C 140 92, 170 70, 205 52 C 240 72, 275 96, 310 124 C 312 150, 312 175, 310 202 C 240 205, 165 204, 95 200 Z M180 202 C 180 182, 181 168, 182 152 C 198 150, 214 150, 228 152 C 229 170, 229 186, 228 203" />
+   <circle cx="228" cy="203" r="9" class="bk-light"/>
+  </svg>
+  <div class="bk-dock" aria-hidden="true">
+   <span class="bk-tool bk-del" title="Clear screen"></span>
+   <span class="bk-rings"><span class="bk-ring on" style="--c:#FFFF00" title="Yellow"></span><span class="bk-ring" style="--c:#E29038" title="Orange"></span><span class="bk-ring" style="--c:#FF3760" title="Pink"></span><span class="bk-ring" style="--c:#FF0F00" title="Red"></span><span class="bk-ring" style="--c:#00B050" title="Green"></span><span class="bk-ring" style="--c:#0C70C0" title="Blue"></span><span class="bk-ring" style="--c:#7031A0" title="Purple"></span></span>
+   <span class="bk-tool bk-shot" title="Screenshot"></span>
+  </div>
+ </div>
+</div>
+<figcaption>HTML and CSS mock-up of the play screen from the MVP brief: camera view with a 50% dark overlay, the drawing area on top and the dock with Clear, the seven colours and Screenshot at the bottom.</figcaption>
+</figure>
+<div class="table-wrap"><table class="compare"><thead><tr><th>Element</th><th>Behaviour in the MVP brief</th><th>Why it matters</th></tr></thead><tbody><tr><td>Drawing area (about 90%)</td><td>Light leaves a smooth Bezier trail</td><td>The core loop has to feel instant</td></tr><tr><td>Dock (about 10%)</td><td>Clear, 7 colours, Screenshot; selected by a long pause of the light</td><td>Hands-free control keeps the child away from the screen</td></tr><tr><td>Logo, top left</td><td>Opens settings by touch only, behind a math question</td><td>Keeps young children out of settings and purchases</td></tr><tr><td>Selection feedback</td><td>Short animation and a sound per action</td><td>Pre-readers need sound and motion, not labels</td></tr></tbody></table></div>
+</section>
+<section id="why-a-use-case"><h2>Why is BriteKind a useful use case for founders?</h2>
+<p>BriteKind packs several hard problems into a very small app: real-time computer vision on a phone, two sets of permissions, a children's audience with strict store rules, a time-based paywall and a big-screen mode. Each one is a decision a founder or product owner has to make on purpose, and each one is easy to get wrong in a first version.</p>
+<p>The scope was deliberately tight. The brief set a one-week build window with mock-ups and prototypes shared along the way, which only works when the feature list is short and every screen is specified in writing. Our guide on <a href="https://guides.shoutex.com/mvp/mvp-timeline/">how long an MVP takes to build</a> explains which scope decisions make a short timeline realistic and which ones quietly double it.</p>
+<div class="red-panel"><div class="panel-kicker">Founder rule</div><h3>Write the screen-by-screen spec before you hire a studio.</h3><p>BriteKind's brief described every screen, every state, every sound file and every colour code. That is what makes a fixed-scope, fixed-week build possible and keeps the change requests small.</p></div>
+</section>
+<section id="audience"><h2>What does designing for ages 3 to 6 change?</h2>
+<p>Young children cannot read menus, do not understand permission prompts and tap anything that moves. The American Academy of Pediatrics' policy statement <a href="https://publications.aap.org/pediatrics/article/138/5/e20162591/60503/Media-and-Young-Minds" rel="noopener" target="_blank">Media and Young Minds</a> encourages co-viewing and active, creative play over passive screen time. BriteKind fits that framing: the child moves around the room, a parent is usually nearby, and the TV mode turns it into a shared activity.</p>
+<figure class="bk-photo"><img src="assets/images/britekind-child-flashlight-light-painting.webp" alt="Young boy in a skeleton costume holding a glowing flashlight toward the camera, the way children play BriteKind to paint on the screen with light" width="1600" height="900" loading="lazy"><figcaption>The flashlight is the controller. The child plays standing up, away from the screen.</figcaption></figure>
+<p>Apple's guidance on <a href="https://developer.apple.com/kids/" rel="noopener" target="_blank">designing safe and age-appropriate experiences</a> sets the platform expectations for kids apps, including parental gates and data collection limits. Read it before writing the spec, not after the first App Review rejection.</p>
+<aside class="note hint" role="note"><div class="note-label">Hint</div><p>Test with real children of the target age in a dim living room, not with adults in an office. A four-year-old's arm speed, distance from the camera and flashlight angle are very different from yours.</p></aside>
+</section>
+<section id="how-guide-works"><h2>How this guide is organized</h2>
+<p>The next pages go deeper in the order a product owner needs: how the light tracking and drawing engine work, what a kids app needs for privacy, permissions and App Review, how to present the app on the App Store, and how the 30-minute free play model turns into revenue. If you are building something similar, the <a href="https://www.reddit.com/r/iOSProgramming/" rel="noopener" target="_blank">r/iOSProgramming community</a> is a good place to sanity-check camera and rendering questions with working iOS developers.</p>
+</section>
+    <div class="grid bk-pn"><a class="card" href="light-tracking/"><b>Light tracking engine</b><span>The light tracking and drawing engine behind BriteKind: camera capture, bright-spot detection, smoothing, dwell selection and AirPlay.</span><em>Next page →</em></a></div>
+  </main>
+
+  <aside class="right"><div data-cta="mob"></div></aside>
+</div>
+
+<footer class="bk-foot"><p>© <span id="yr">2026</span> ShoutEx Digital Marketing and Development. The GitHub home of ShoutEx.</p>
+<nav aria-label="ShoutEx"><a href="https://shoutex.com">shoutex.com</a><a href="https://shoutex.com/contact">Contact</a></nav></footer>
+<script>
+document.getElementById("yr").textContent=new Date().getFullYear();
+document.querySelectorAll(".bk-play").forEach(function(b){b.addEventListener("click",function(){
+var f=document.createElement("iframe");f.src="https://www.youtube-nocookie.com/embed/"+b.dataset.yt+"?autoplay=1&rel=0";
+f.title="BriteKind video";f.allow="autoplay; encrypted-media; picture-in-picture";f.allowFullscreen=true;b.replaceWith(f);});});
+</script>
+<!-- Default Statcounter code for ShoutEx New
+https://www.shoutex.com -->
+<script type="text/javascript">
+var sc_project=13004247;
+var sc_invisible=1;
+var sc_security="862950b7";
+</script>
+<script type="text/javascript"
+src="https://www.statcounter.com/counter/counter.js"
+async></script>
+<noscript><div class="statcounter"><a title="website
+statistics" href="https://statcounter.com/"
+target="_blank"><img class="statcounter"
+src="https://c.statcounter.com/13004247/0/862950b7/1/"
+alt="website statistics"
+referrerPolicy="no-referrer-when-downgrade"></a></div></noscript>
+<!-- End of Statcounter Code -->
+</body>
+</html>

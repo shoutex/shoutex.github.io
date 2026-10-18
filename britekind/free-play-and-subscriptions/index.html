@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en-CA">
+<head>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-P3GVGXD');</script>
+<!-- End Google Tag Manager -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BriteKind Monetization: Free Play Time and Subscriptions</title>
+<meta name="description" content="How BriteKind&#x27;s 30-minute free play model works with StoreKit subscriptions, parent gates and the metrics that show it is paying off.">
+<link rel="canonical" href="https://shoutex.github.io/britekind/free-play-and-subscriptions/">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<meta property="og:type" content="article">
+<meta property="og:title" content="BriteKind Monetization: Free Play Time and Subscriptions">
+<meta property="og:description" content="How BriteKind&#x27;s 30-minute free play model works with StoreKit subscriptions, parent gates and the metrics that show it is paying off.">
+<meta property="og:url" content="https://shoutex.github.io/britekind/free-play-and-subscriptions/">
+<meta name="twitter:card" content="summary">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://guides.shoutex.com/assets/guides.css">
+<link rel="stylesheet" href="../assets/britekind.css">
+<script src="https://guides.shoutex.com/assets/includes.js" defer></script>
+<script type="application/ld+json">[{"@context": "https://schema.org", "@type": "Article", "headline": "Free play time, subscriptions and the numbers to watch", "description": "How BriteKind's 30-minute free play model works with StoreKit subscriptions, parent gates and the metrics that show it is paying off.", "url": "https://shoutex.github.io/britekind/free-play-and-subscriptions/", "datePublished": "2026-10-17", "dateModified": "2026-10-17", "inLanguage": "en-CA", "author": {"@type": "Organization", "name": "ShoutEx", "url": "https://shoutex.com"}, "publisher": {"@type": "Organization", "name": "ShoutEx", "url": "https://shoutex.com", "logo": {"@type": "ImageObject", "url": "https://shoutex.com/shoutex/shoutex-logo.webp"}}, "isPartOf": {"@type": "WebSite", "name": "BriteKind: a camera-based kids app use case", "url": "https://shoutex.github.io/britekind/"}}, {"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "BriteKind", "item": "https://shoutex.github.io/britekind/"}, {"@type": "ListItem", "position": 2, "name": "Free play and subscriptions", "item": "https://shoutex.github.io/britekind/free-play-and-subscriptions/"}]}]</script>
+</head>
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-P3GVGXD"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+<div data-include="header"></div>
+
+<div class="layout">
+  <aside class="left"><a class="home-link" href="../"><span aria-hidden="true">←</span> BriteKind guide home</a><nav class="quick" aria-label="BriteKind guide">
+    <div class="quick-title">BriteKind guide</div>
+    <a href="../">BriteKind overview</a><a href="../light-tracking/">Light tracking engine</a><a href="../kids-privacy-and-review/">Kids privacy and App Review</a><a href="../app-store-optimization/">App Store optimization</a><a href="../free-play-and-subscriptions/" aria-current="page">Free play and subscriptions</a>
+    <div class="quick-section"><div class="quick-section-title">On this page</div><a href="#model">How does the 30-minute free play model work?</a><a href="#storekit">What does the subscription need technically?</a><a href="#ending">How should the free time end?</a><a href="#metrics">Which numbers show the model is working?</a></div>
+  </nav></aside>
+
+  <main>
+    <div class="eyebrow">Kids app use case · Technical</div>
+    <h1>Free play time, subscriptions and the numbers to watch</h1>
+    <p class="dek">BriteKind gives every family 30 minutes of total free play, then asks a parent to subscribe. It is a simple model with some technical details that decide whether it converts or annoys. Here is how it works and how we would measure it.</p>
+    <div class="meta">ShoutEx Team · Updated October 2026 · Page 5 of 5</div>
+    <div class="breadcrumb"><a href="../">BriteKind</a> / Free play and subscriptions</div>
+<section id="model"><h2>How does the 30-minute free play model work?</h2>
+<p>The app counts active play time across sessions. Settings shows how many free minutes remain, with a Subscribe option behind the parent gate. When the 30 minutes are used, the camera stops, the dock disappears and a message asks a parent to subscribe to keep playing. Time is the meter because it maps directly to the value: more drawing sessions.</p>
+<div class="table-wrap"><table class="compare"><thead><tr><th>Model</th><th>How it feels to a parent</th><th>Watch out for</th></tr></thead><tbody><tr><td>Time-limited free play (BriteKind)</td><td>Fair: the child gets real play before any ask</td><td>Count only active play, not time with the app open in the background</td></tr><tr><td>Feature-limited free tier</td><td>Clear, but the free version can feel thin</td><td>Hard to choose which features to lock in a small app</td></tr><tr><td>Paid upfront</td><td>No surprises, but no try-before-you-buy</td><td>Lower install volume from search</td></tr><tr><td>One-time unlock in-app</td><td>Simple for a single-purpose toy</td><td>No recurring revenue to fund updates</td></tr></tbody></table></div>
+</section>
+<section id="storekit"><h2>What does the subscription need technically?</h2>
+<p>Use StoreKit with <a href="https://developer.apple.com/app-store/subscriptions/" rel="noopener" target="_blank">auto-renewable subscriptions</a> and check entitlement on launch and when the app returns to the foreground. Store the free-minute counter in the keychain as well as user defaults, so a reinstall does not quietly reset the trial. The purchase button lives behind the parent gate, as the Kids Category requires.</p>
+<p>If you add a free trial on top of the free minutes, Apple's guide to <a href="https://developer.apple.com/documentation/storekit/implementing-introductory-offers-in-your-app" rel="noopener" target="_blank">implementing introductory offers</a> explains eligibility checks, so returning users do not see an offer they cannot claim.</p>
+<aside class="note important" role="note"><div class="note-label">Important</div><p>Show the price, the renewal period and how to cancel on the paywall itself. Unclear subscription terms are a common rejection reason and an even more common cause of refund requests from parents.</p></aside>
+</section>
+<section id="ending"><h2>How should the free time end?</h2>
+<p>End it gently. A child mid-drawing should not see the screen go dark without warning. Show a short countdown in the last minute, let the current drawing finish and offer to save a screenshot if the parent has turned screenshots on. Then show the parent-facing message. The goal is that the child remembers the fun, not the interruption.</p>
+<p>The American Academy of Pediatrics' statement on <a href="https://publications.aap.org/pediatrics/article/146/1/e20201681/37013/Digital-Advertising-to-Children" rel="noopener" target="_blank">digital advertising to children</a> is a useful reminder of where the line is: persuasive design aimed at young children draws criticism. Address the purchase message to the parent, not the child.</p>
+<div class="red-panel"><div class="panel-kicker">Founder rule</div><h3>Never sell to the child.</h3><p>The paywall talks to the parent, sits behind the gate and uses plain words. A kids app that pressures children to ask for a purchase will lose parents' trust faster than it gains revenue.</p></div>
+</section>
+<section id="metrics"><h2>Which numbers show the model is working?</h2>
+<p>Track the funnel from install to paying family, and the shape of free play inside it. The most useful early signals are how many families use all 30 minutes, how many days that takes and how many parents who reach the end message go on to subscribe.</p>
+<div class="table-wrap"><table class="compare"><thead><tr><th>Metric</th><th>What it tells you</th></tr></thead><tbody><tr><td>Camera permission granted on first launch</td><td>Whether onboarding explains the camera well enough</td></tr><tr><td>Families reaching 10, 20 and 30 free minutes</td><td>Whether the core loop holds attention</td></tr><tr><td>Days to use the 30 minutes</td><td>Whether play is a habit or a one-off novelty</td></tr><tr><td>End message to subscription</td><td>Whether the paywall copy and price work</td></tr><tr><td>Month-two subscription retention</td><td>Whether families keep playing after the novelty</td></tr></tbody></table></div>
+<p>Our guide on <a href="https://guides.shoutex.com/mobile-apps/paywalls/">paywalls for mobile apps</a> covers paywall design, placement and testing in more detail. For honest numbers from other small-app founders on trial length and conversion, <a href="https://www.indiehackers.com/" rel="noopener" target="_blank">Indie Hackers</a> is a useful place to compare notes, as long as you treat what you read as anecdote rather than benchmark.</p>
+<aside class="note key" role="note"><div class="note-label">Key point</div><p>If many families never reach 30 minutes, fix the play experience before touching the price. A paywall cannot convert families who stopped playing.</p></aside>
+</section>
+    <div class="grid bk-pn"><a class="card" href="../app-store-optimization/"><b>App Store optimization</b><span>How BriteKind's App Store screenshots, title and preview video work, with a review of the real promo set and what we would test.</span><em>← Previous page</em></a></div>
+  </main>
+
+  <aside class="right"><div data-cta="mob-price"></div></aside>
+</div>
+
+<footer class="bk-foot"><p>© <span id="yr">2026</span> ShoutEx Digital Marketing and Development. The GitHub home of ShoutEx.</p>
+<nav aria-label="ShoutEx"><a href="https://shoutex.com">shoutex.com</a><a href="https://shoutex.com/contact">Contact</a></nav></footer>
+<script>
+document.getElementById("yr").textContent=new Date().getFullYear();
+document.querySelectorAll(".bk-play").forEach(function(b){b.addEventListener("click",function(){
+var f=document.createElement("iframe");f.src="https://www.youtube-nocookie.com/embed/"+b.dataset.yt+"?autoplay=1&rel=0";
+f.title="BriteKind video";f.allow="autoplay; encrypted-media; picture-in-picture";f.allowFullscreen=true;b.replaceWith(f);});});
+</script>
+<!-- Default Statcounter code for ShoutEx New
+https://www.shoutex.com -->
+<script type="text/javascript">
+var sc_project=13004247;
+var sc_invisible=1;
+var sc_security="862950b7";
+</script>
+<script type="text/javascript"
+src="https://www.statcounter.com/counter/counter.js"
+async></script>
+<noscript><div class="statcounter"><a title="website
+statistics" href="https://statcounter.com/"
+target="_blank"><img class="statcounter"
+src="https://c.statcounter.com/13004247/0/862950b7/1/"
+alt="website statistics"
+referrerPolicy="no-referrer-when-downgrade"></a></div></noscript>
+<!-- End of Statcounter Code -->
+</body>
+</html>

@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="en-CA">
+<head>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-P3GVGXD');</script>
+<!-- End Google Tag Manager -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Building an AI Visibility Collector: APIs, Schema, Metrics</title>
+<meta name="description" content="Phase 1 of the Pagezii roadmap: collecting AI answers by API, storing raw responses, parsing brand mentions and citations, and metric SQL.">
+<link rel="canonical" href="https://shoutex.github.io/pagezii/visibility-collector/">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Building an AI Visibility Collector: APIs, Schema, Metrics">
+<meta property="og:description" content="Phase 1 of the Pagezii roadmap: collecting AI answers by API, storing raw responses, parsing brand mentions and citations, and metric SQL.">
+<meta property="og:url" content="https://shoutex.github.io/pagezii/visibility-collector/">
+<meta name="twitter:card" content="summary">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://guides.shoutex.com/assets/guides.css">
+<link rel="stylesheet" href="../assets/pagezii.css">
+<script src="https://guides.shoutex.com/assets/includes.js" defer></script>
+<script type="application/ld+json">[{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Phase 1: building the AI visibility collector", "description": "Phase 1 of the Pagezii roadmap: collecting AI answers by API, storing raw responses, parsing brand mentions and citations, and metric SQL.", "url": "https://shoutex.github.io/pagezii/visibility-collector/", "datePublished": "2026-10-17", "dateModified": "2026-10-17", "inLanguage": "en-CA", "author": {"@type": "Organization", "name": "ShoutEx", "url": "https://shoutex.com"}, "publisher": {"@type": "Organization", "name": "ShoutEx", "url": "https://shoutex.com", "logo": {"@type": "ImageObject", "url": "https://shoutex.com/shoutex/shoutex-logo.webp"}}, "isPartOf": {"@type": "WebSite", "name": "Pagezii MVP roadmap", "url": "https://shoutex.github.io/pagezii/"}}, {"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Pagezii MVP roadmap", "item": "https://shoutex.github.io/pagezii/"}, {"@type": "ListItem", "position": 2, "name": "Phase 1: Visibility collector", "item": "https://shoutex.github.io/pagezii/visibility-collector/"}]}]</script>
+</head>
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-P3GVGXD"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+<div data-include="header"></div>
+
+<div class="layout">
+  <aside class="left"><a class="home-link" href="../"><span aria-hidden="true">←</span> Pagezii roadmap home</a><nav class="quick" aria-label="Pagezii roadmap">
+    <div class="quick-title">Pagezii roadmap</div>
+    <a href="../">Roadmap overview</a><a href="../visibility-collector/" aria-current="page">Phase 1: Visibility collector</a><a href="../prompt-intelligence/">Phase 2: Prompt intelligence</a><a href="../attribution-and-ads/">Phases 3 and 4: Attribution and ads</a>
+    <div class="quick-section"><div class="quick-section-title">On this page</div><a href="#collection">How should answers be collected from each engine?</a><a href="#sampling">How many times should each prompt be run?</a><a href="#schema">What does the data model look like?</a><a href="#parsing">How are brand mentions and recommendations detected?</a><a href="#metrics">Which metrics come out of Phase 1?</a></div>
+  </nav></aside>
+
+  <main>
+    <div class="eyebrow">MVP roadmap · Technical</div>
+    <h1>Phase 1: building the AI visibility collector</h1>
+    <p class="dek">Phase 1 answers one question reliably: how often is a brand mentioned, recommended or cited across AI engines for a fixed set of prompts? Here is the collection method, the data model, the parsers and the metric queries.</p>
+    <div class="meta">ShoutEx Team · Updated October 2026 · Page 2 of 4</div>
+    <div class="breadcrumb"><a href="../">Pagezii roadmap</a> / Phase 1: Visibility collector</div>
+<section id="collection"><h2>How should answers be collected from each engine?</h2>
+<p>Collect through official APIs with web search or grounding turned on, never by scraping consumer chat interfaces. APIs are stable, legal to automate and return citations as structured data. OpenAI's <a href="https://platform.openai.com/docs/guides/tools-web-search" rel="noopener" target="_blank">web search tool</a>, Gemini's <a href="https://ai.google.dev/gemini-api/docs/google-search" rel="noopener" target="_blank">grounding with Google Search</a> and Perplexity's <a href="https://docs.perplexity.ai/docs/sonar/quickstart" rel="noopener" target="_blank">search API</a> each return the answer text plus the sources used.</p>
+<pre class="bk-code"><span class="pz-lang">python</span><code>from openai import OpenAI
+
+client = OpenAI()
+
+def collect_openai(prompt: str, model: str) -&gt; dict:
+    resp = client.responses.create(
+        model=model,                       # pin and record the exact model
+        tools=[{&quot;type&quot;: &quot;web_search&quot;}],    # check the docs for the current tool name
+        input=prompt,
+    )
+    citations = [
+        ann.url
+        for item in resp.output if item.type == &quot;message&quot;
+        for part in item.content
+        for ann in (getattr(part, &quot;annotations&quot;, None) or [])
+        if ann.type == &quot;url_citation&quot;
+    ]
+    return {&quot;engine&quot;: &quot;openai&quot;, &quot;model&quot;: model,
+            &quot;answer&quot;: resp.output_text, &quot;citations&quot;: citations,
+            &quot;raw&quot;: resp.model_dump()}</code></pre>
+<pre class="bk-code"><span class="pz-lang">python</span><code>from google import genai
+from google.genai import types
+
+gclient = genai.Client()
+
+def collect_gemini(prompt: str, model: str) -&gt; dict:
+    resp = gclient.models.generate_content(
+        model=model,
+        contents=prompt,
+        config=types.GenerateContentConfig(
+            tools=[types.Tool(google_search=types.GoogleSearch())]),
+    )
+    meta = resp.candidates[0].grounding_metadata
+    citations = [c.web.uri for c in (meta.grounding_chunks or []) if c.web]
+    return {&quot;engine&quot;: &quot;gemini&quot;, &quot;model&quot;: model,
+            &quot;answer&quot;: resp.text, &quot;citations&quot;: citations,
+            &quot;raw&quot;: resp.model_dump()}</code></pre>
+<aside class="note important" role="note"><div class="note-label">Important</div><p>API answers are not identical to what a signed-in user sees in the consumer app, which can add memory, location and personalization. Report Pagezii's numbers as API-measured visibility and say so on every chart.</p></aside>
+</section>
+<section id="sampling"><h2>How many times should each prompt be run?</h2>
+<p>Run every prompt several times per engine per collection cycle, because AI answers vary between identical requests. A single run tells you what one answer said; five to ten runs tell you how often a brand appears. Store each run with a sample number so variance can be measured, and keep temperature and model settings fixed within a cycle.</p>
+<p>Budget this early. Prompts multiplied by engines, samples and weekly cycles grows fast, so start with a few hundred prompts and expand only when the metrics are stable.</p>
+</section>
+<section id="schema"><h2>What does the data model look like?</h2>
+<p>Five core tables cover Phase 1. Raw answers live in JSONB so nothing is lost; parsed rows are derived and can be rebuilt at any time.</p>
+<pre class="bk-code"><span class="pz-lang">sql</span><code>create table brands (
+  id        serial primary key,
+  name      text not null,
+  aliases   text[] not null default &#x27;{}&#x27;   -- &quot;HubSpot&quot;, &quot;Hubspot CRM&quot;, ...
+);
+
+create table prompts (
+  id        serial primary key,
+  text      text not null,
+  intent    text,                          -- set in Phase 2
+  locale    text not null default &#x27;en-CA&#x27;
+);
+
+create table runs (
+  id          bigserial primary key,
+  prompt_id   int references prompts(id),
+  engine      text not null,               -- openai | gemini | perplexity
+  model       text not null,
+  sample_no   smallint not null,
+  run_at      timestamptz not null default now(),
+  answer_text text not null,
+  raw         jsonb not null
+);
+
+create table mentions (
+  run_id      bigint references runs(id),
+  brand_id    int references brands(id),
+  first_pos   int,                         -- character offset of first mention
+  recommended boolean,                     -- set by the LLM judge
+  primary key (run_id, brand_id)
+);
+
+create table citations (
+  run_id  bigint references runs(id),
+  url     text not null,
+  domain  text not null,
+  rank    smallint                         -- order in the source list
+);</code></pre>
+</section>
+<section id="parsing"><h2>How are brand mentions and recommendations detected?</h2>
+<p>Use two passes. First, deterministic alias matching with word boundaries finds every mention and its position; it is fast, cheap and easy to test. Second, an LLM judge with a structured output schema decides whether each mentioned brand was actually recommended, merely listed or warned against. Validate the judge against a hand-labelled sample of a few hundred answers and track its precision and recall like any other model.</p>
+<pre class="bk-code"><span class="pz-lang">python</span><code>import re
+
+def find_mentions(answer: str, brands: list[dict]) -&gt; list[dict]:
+    hits = []
+    for b in brands:
+        names = [b[&quot;name&quot;], *b[&quot;aliases&quot;]]
+        pattern = r&quot;\b(&quot; + &quot;|&quot;.join(map(re.escape, names)) + r&quot;)\b&quot;
+        m = re.search(pattern, answer, flags=re.IGNORECASE)
+        if m:
+            hits.append({&quot;brand_id&quot;: b[&quot;id&quot;], &quot;first_pos&quot;: m.start()})
+    return sorted(hits, key=lambda h: h[&quot;first_pos&quot;])</code></pre>
+<div class="red-panel"><div class="panel-kicker">CTO rule</div><h3>Test the parser like production code.</h3><p>A mention rate is only as good as the parser behind it. Keep a labelled test set in the repository and fail the build when precision or recall drops.</p></div>
+</section>
+<section id="metrics"><h2>Which metrics come out of Phase 1?</h2>
+<p>Three metrics are enough for a first release: mention rate (share of runs that mention the brand), recommendation rate (share of runs where the judge marks it recommended) and citation share (share of cited URLs on the brand's domains). Pagezii's note on <a href="https://pagezii.com/blog/ai-visibility-explained/">what AI visibility is and why it differs from SEO rankings</a> explains why these replace rank as the core unit.</p>
+<pre class="bk-code"><span class="pz-lang">sql</span><code>-- Weekly mention rate per engine for one brand
+select date_trunc(&#x27;week&#x27;, r.run_at) as week,
+       r.engine,
+       avg((m.brand_id is not null)::int)::numeric(5,3) as mention_rate,
+       count(*)                                        as runs
+from runs r
+left join mentions m on m.run_id = r.id and m.brand_id = :brand_id
+group by 1, 2
+order by 1, 2;</code></pre>
+<p>Our guide on <a href="https://guides.shoutex.com/ai-search/how-ai-search-cites-sources/">how AI search cites sources</a> covers what tends to earn citations, which is the question every customer will ask once they see these numbers.</p>
+</section>
+    <div class="grid bk-pn"><a class="card" href="../"><b>Roadmap overview</b><span>A technical MVP roadmap for Pagezii: architecture, phases and exit criteria for measuring how AI systems mention and cite brands.</span><em>← Previous page</em></a><a class="card" href="../prompt-intelligence/"><b>Phase 2: Prompt intelligence</b><span>Phase 2 of the Pagezii roadmap: sourcing commercial prompts, an intent taxonomy, embedding prompts and clustering them with HDBSCAN.</span><em>Next page →</em></a></div>
+  </main>
+
+  <aside class="right"><div data-cta="mvp"></div></aside>
+</div>
+
+<footer class="bk-foot"><p>© <span id="yr">2026</span> ShoutEx Digital Marketing and Development. The GitHub home of ShoutEx.</p>
+<nav aria-label="ShoutEx"><a href="https://shoutex.com">shoutex.com</a><a href="https://shoutex.com/contact">Contact</a></nav></footer>
+<script>
+document.getElementById("yr").textContent=new Date().getFullYear();
+document.querySelectorAll(".bk-play").forEach(function(b){b.addEventListener("click",function(){
+var f=document.createElement("iframe");f.src="https://www.youtube-nocookie.com/embed/"+b.dataset.yt+"?autoplay=1&rel=0";
+f.title="Video";f.allow="autoplay; encrypted-media; picture-in-picture";f.allowFullscreen=true;b.replaceWith(f);});});
+</script>
+<!-- Default Statcounter code for ShoutEx New
+https://www.shoutex.com -->
+<script type="text/javascript">
+var sc_project=13004247;
+var sc_invisible=1;
+var sc_security="862950b7";
+</script>
+<script type="text/javascript"
+src="https://www.statcounter.com/counter/counter.js"
+async></script>
+<noscript><div class="statcounter"><a title="website
+statistics" href="https://statcounter.com/"
+target="_blank"><img class="statcounter"
+src="https://c.statcounter.com/13004247/0/862950b7/1/"
+alt="website statistics"
+referrerPolicy="no-referrer-when-downgrade"></a></div></noscript>
+<!-- End of Statcounter Code -->
+</body>
+</html>

@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en-CA">
+<head>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-P3GVGXD');</script>
+<!-- End Google Tag Manager -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Building InterQ: App Stores, Email and Candidate Privacy</title>
+<meta name="description" content="The technical choices behind a hiring app like InterQ: app store approval, the test engine, email delivery and candidate privacy.">
+<link rel="canonical" href="https://shoutex.github.io/interq/building-the-app/">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Building InterQ: App Stores, Email and Candidate Privacy">
+<meta property="og:description" content="The technical choices behind a hiring app like InterQ: app store approval, the test engine, email delivery and candidate privacy.">
+<meta property="og:url" content="https://shoutex.github.io/interq/building-the-app/">
+<meta name="twitter:card" content="summary">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://guides.shoutex.com/assets/guides.css">
+<link rel="stylesheet" href="../assets/interq.css">
+<script src="https://guides.shoutex.com/assets/includes.js" defer></script>
+<script type="application/ld+json">[{"@context": "https://schema.org", "@type": "Article", "headline": "Building InterQ: app stores, email delivery and privacy", "description": "The technical choices behind a hiring app like InterQ: app store approval, the test engine, email delivery and candidate privacy.", "url": "https://shoutex.github.io/interq/building-the-app/", "datePublished": "2026-10-17", "dateModified": "2026-10-17", "inLanguage": "en-CA", "author": {"@type": "Organization", "name": "ShoutEx", "url": "https://shoutex.com"}, "publisher": {"@type": "Organization", "name": "ShoutEx", "url": "https://shoutex.com", "logo": {"@type": "ImageObject", "url": "https://shoutex.com/shoutex/shoutex-logo.webp"}}, "isPartOf": {"@type": "WebSite", "name": "InterQ: a vertical mobile app use case", "url": "https://shoutex.github.io/interq/"}}, {"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "InterQ", "item": "https://shoutex.github.io/interq/"}, {"@type": "ListItem", "position": 2, "name": "Building the app", "item": "https://shoutex.github.io/interq/building-the-app/"}]}]</script>
+</head>
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-P3GVGXD"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+<div data-include="header"></div>
+
+<div class="layout">
+  <aside class="left"><a class="home-link" href="../"><span aria-hidden="true">←</span> InterQ guide home</a><nav class="quick" aria-label="InterQ guide">
+    <div class="quick-title">InterQ guide</div>
+    <a href="../">InterQ overview</a><a href="../test-and-response-sheet/">The test and response sheet</a><a href="../building-the-app/" aria-current="page">Building the app</a><a href="../marketing-to-recruiters/">Marketing to recruiters</a><a href="../measuring-traction/">Measuring traction</a>
+    <div class="quick-section"><div class="quick-section-title">On this page</div><a href="#app-store">Why ship InterQ as an app store app?</a><a href="#test-engine">How should the test be delivered?</a><a href="#email-delivery">How do you make sure the response sheet reaches the recruiter?</a><a href="#privacy">What does candidate privacy require?</a><a href="#stack">Which tech stack fits an app like InterQ?</a></div>
+  </nav></aside>
+
+  <main>
+    <div class="eyebrow">Vertical app use case</div>
+    <h1>Building InterQ: app stores, email delivery and privacy</h1>
+    <p class="dek">InterQ looks simple from the outside: download, answer, email. Underneath, four engineering decisions decide whether it works: how it ships through the app stores, how the test is delivered, how the sheet reaches the recruiter and how candidate data is protected.</p>
+    <div class="meta">ShoutEx Team · Updated October 2026 · Page 3 of 5</div>
+    <div class="breadcrumb"><a href="../">InterQ</a> / Building the app</div>
+<section id="app-store"><h2>Why ship InterQ as an app store app?</h2>
+<p>InterQ asks the candidate to download the app, which gives it a trusted install path, a place in the candidate's phone and a store listing that doubles as marketing. The cost is review. Apple's <a href="https://developer.apple.com/app-store/review/guidelines/" rel="noopener" target="_blank">App Store Review Guidelines</a> set rules on privacy disclosures, account deletion, data use and minimum functionality, and a hiring app collects personal data from the first screen.</p>
+<p>Plan the privacy labels, the data deletion flow and the review notes before the first submission. Rejections usually come from missing disclosures, not from the core idea.</p>
+<aside class="note hint" role="note"><div class="note-label">Hint</div><p>Write the App Store privacy label and the privacy policy in the same afternoon, from one shared list of every data field the app collects. Mismatches between the two are a common reason for review delays.</p></aside>
+</section>
+<section id="test-engine"><h2>How should the test be delivered?</h2>
+<p>Keep the questions on the server and download them when the candidate starts. That lets you change wording, add languages or fix a confusing question without shipping a new app version and waiting for review. Save each answer on the phone as the candidate goes, so a dropped connection or an incoming call never costs them their progress.</p>
+<p>Avoid heavy anti-cheating features. InterQ's answers are talking points, not a pass mark, so locking the phone or tracking the camera adds friction and privacy risk for no real gain.</p>
+</section>
+<section id="email-delivery"><h2>How do you make sure the response sheet reaches the recruiter?</h2>
+<p>Email is the product's delivery truck, so treat deliverability as core engineering work. Send from your own domain through a transactional email provider, and set up SPF, DKIM and DMARC records before launch. Google's <a href="https://support.google.com/mail/answer/81126?hl=en" rel="noopener" target="_blank">email sender guidelines</a> list the authentication and formatting rules Gmail applies, and corporate mail filters are often stricter.</p>
+<ul>
+<li><strong>Send a web link and a PDF.</strong> The link always works on a phone; the PDF suits recruiters who forward sheets to hiring managers.</li>
+<li><strong>Confirm delivery to the candidate.</strong> A short "your sheet was sent" message reduces anxious follow-up emails.</li>
+<li><strong>Log bounces.</strong> A wrong recruiter address is the most common failure, and only the logs will show it.</li>
+</ul>
+</section>
+<section id="privacy"><h2>What does candidate privacy require?</h2>
+<p>Candidates share how they think, which is personal information, with a company they do not work for yet. Collect only what the response sheet needs, explain clearly who will see it, and delete it on a set schedule. In Canada, the Office of the Privacy Commissioner summarizes <a href="https://www.priv.gc.ca/en/privacy-topics/privacy-laws-in-canada/the-personal-information-protection-and-electronic-documents-act-pipeda/pipeda_brief/" rel="noopener" target="_blank">PIPEDA's requirements in brief</a>, including consent, limiting collection and safeguarding data.</p>
+<p>For the build itself, the <a href="https://owasp.org/www-project-mobile-top-10/" rel="noopener" target="_blank">OWASP Mobile Top 10</a> is a useful checklist: secure local storage, encrypted traffic, no secrets in the app code and proper authentication for anything a recruiter can open.</p>
+<aside class="note important" role="note"><div class="note-label">Important</div><p>Privacy law differs between provinces, states and countries. Confirm your consent wording and data retention with a privacy lawyer before selling to employers outside your home market.</p></aside>
+</section>
+<section id="stack"><h2>Which tech stack fits an app like InterQ?</h2>
+<p>A cross-platform framework such as React Native or Flutter is a sensible default here. The app is mostly forms, text and simple navigation, with no heavy camera or hardware use, so one codebase for iOS and Android saves real money. A small server handles questions, sheet generation and email.</p>
+<p>Our guide on <a href="https://guides.shoutex.com/mvp/mvp-tech-stack/">choosing an MVP tech stack</a> walks through the trade-offs in more detail, including when native development is worth the extra cost.</p>
+<div class="red-panel"><div class="panel-kicker">Founder rule</div><h3>Never let the candidate lose an answer.</h3><p>Save every answer on the phone the moment it is given. One lost test costs you a candidate's trust and a recruiter's sheet at the same time.</p></div>
+</section>
+    <div class="grid iq-pn"><a class="card" href="../test-and-response-sheet/"><b>The test and response sheet</b><span>How to design a short interview icebreaker test on logic, game theory and critical thinking, and a response sheet recruiters use.</span><em>← Previous page</em></a><a class="card" href="../marketing-to-recruiters/"><b>Marketing to recruiters</b><span>Positioning, pilots, channels and pricing for selling a hiring app like InterQ to recruiters, agencies and HR teams.</span><em>Next page →</em></a></div>
+  </main>
+
+  <aside class="right"><div data-cta="mvp"></div></aside>
+</div>
+
+<footer class="iq-foot"><p>© <span id="yr">2026</span> ShoutEx Digital Marketing and Development. The GitHub home of ShoutEx.</p>
+<nav aria-label="ShoutEx"><a href="https://shoutex.com">shoutex.com</a><a href="https://shoutex.com/contact">Contact</a></nav></footer>
+<script>
+document.getElementById("yr").textContent=new Date().getFullYear();
+document.querySelectorAll(".iq-play").forEach(function(b){b.addEventListener("click",function(){
+var f=document.createElement("iframe");f.src="https://www.youtube-nocookie.com/embed/"+b.dataset.yt+"?autoplay=1&rel=0";
+f.title="InterQ video";f.allow="autoplay; encrypted-media; picture-in-picture";f.allowFullscreen=true;b.replaceWith(f);});});
+</script>
+<!-- Default Statcounter code for ShoutEx New
+https://www.shoutex.com -->
+<script type="text/javascript">
+var sc_project=13004247;
+var sc_invisible=1;
+var sc_security="862950b7";
+</script>
+<script type="text/javascript"
+src="https://www.statcounter.com/counter/counter.js"
+async></script>
+<noscript><div class="statcounter"><a title="website
+statistics" href="https://statcounter.com/"
+target="_blank"><img class="statcounter"
+src="https://c.statcounter.com/13004247/0/862950b7/1/"
+alt="website statistics"
+referrerPolicy="no-referrer-when-downgrade"></a></div></noscript>
+<!-- End of Statcounter Code -->
+</body>
+</html>

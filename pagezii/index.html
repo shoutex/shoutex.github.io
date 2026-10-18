@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en-CA">
+<head>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-P3GVGXD');</script>
+<!-- End Google Tag Manager -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pagezii MVP Roadmap: Measuring Brands in AI Search</title>
+<meta name="description" content="A technical MVP roadmap for Pagezii: architecture, phases and exit criteria for measuring how AI systems mention and cite brands.">
+<link rel="canonical" href="https://shoutex.github.io/pagezii/">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Pagezii MVP Roadmap: Measuring Brands in AI Search">
+<meta property="og:description" content="A technical MVP roadmap for Pagezii: architecture, phases and exit criteria for measuring how AI systems mention and cite brands.">
+<meta property="og:url" content="https://shoutex.github.io/pagezii/">
+<meta name="twitter:card" content="summary">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://guides.shoutex.com/assets/guides.css">
+<link rel="stylesheet" href="assets/pagezii.css">
+<script src="https://guides.shoutex.com/assets/includes.js" defer></script>
+<script type="application/ld+json">[{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Pagezii MVP roadmap: measuring brands inside AI answers", "description": "A technical MVP roadmap for Pagezii: architecture, phases and exit criteria for measuring how AI systems mention and cite brands.", "url": "https://shoutex.github.io/pagezii/", "datePublished": "2026-10-17", "dateModified": "2026-10-17", "inLanguage": "en-CA", "author": {"@type": "Organization", "name": "ShoutEx", "url": "https://shoutex.com"}, "publisher": {"@type": "Organization", "name": "ShoutEx", "url": "https://shoutex.com", "logo": {"@type": "ImageObject", "url": "https://shoutex.com/shoutex/shoutex-logo.webp"}}, "isPartOf": {"@type": "WebSite", "name": "Pagezii MVP roadmap", "url": "https://shoutex.github.io/pagezii/"}}, {"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Pagezii MVP roadmap", "item": "https://shoutex.github.io/pagezii/"}]}]</script>
+</head>
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-P3GVGXD"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+<div data-include="header"></div>
+
+<div class="layout">
+  <aside class="left"><a class="home-link" href="https://guides.shoutex.com/"><span aria-hidden="true">←</span> All ShoutEx guides</a><nav class="quick" aria-label="Pagezii roadmap">
+    <div class="quick-title">Pagezii roadmap</div>
+    <a href="./" aria-current="page">Roadmap overview</a><a href="visibility-collector/">Phase 1: Visibility collector</a><a href="prompt-intelligence/">Phase 2: Prompt intelligence</a><a href="attribution-and-ads/">Phases 3 and 4: Attribution and ads</a>
+    <div class="quick-section"><div class="quick-section-title">On this page</div><a href="#what-it-measures">What does Pagezii need to measure?</a><a href="#architecture">What does the system architecture look like?</a><a href="#phases">What are the roadmap phases?</a></div>
+  </nav></aside>
+
+  <main>
+    <div class="eyebrow">MVP roadmap · Technical</div>
+    <h1>Pagezii MVP roadmap: measuring brands inside AI answers</h1>
+    <p class="dek">Pagezii studies how brands are discovered, recommended and measured across ChatGPT, Google AI, Gemini and other AI search tools. This is a proposed technical roadmap for turning that research into a first product, written for a founder and a CTO.</p>
+    <div class="meta">ShoutEx Team · Updated October 2026 · Page 1 of 4</div>
+    <div class="breadcrumb">Pagezii MVP roadmap</div>
+<section id="what-it-measures"><h2>What does Pagezii need to measure?</h2>
+<p>Pagezii's research covers three layers: which prompts drive commercial discovery, how often a brand is mentioned, recommended or cited in AI answers, and how that discovery connects to visits and conversions. An MVP has to turn each layer into a number that can be collected the same way every week and compared over time.</p>
+<p>The research base is real and growing. The <a href="https://arxiv.org/abs/2311.09735" rel="noopener" target="_blank">GEO: Generative Engine Optimization paper</a> introduced visibility metrics for generative engines, and newer work proposes a <a href="https://arxiv.org/html/2604.25707" rel="noopener" target="_blank">measurement framework for citations across AI search platforms</a>. Pagezii's own note on <a href="https://pagezii.com/blog/how-llms-choose-brands/">how LLMs decide which brands to recommend</a> summarizes why this is a different problem from ranking pages. Our guide on <a href="https://guides.shoutex.com/ai-search/what-is-ai-search-visibility/">what AI search visibility is</a> covers the marketing side.</p>
+</section>
+<section id="architecture"><h2>What does the system architecture look like?</h2>
+<p>The system is a batch pipeline, not a real-time product. A prompt library feeds collectors that query each AI engine on a schedule, every raw answer is stored unchanged, and parsers turn answers into structured mentions and citations. Metrics and attribution sit on top. Keeping raw answers is the most important design decision, because the parsers will improve and you will want to re-run them on old data.</p>
+<figure class="pz-flow" aria-label="Pagezii system architecture: prompt sets feed engine collectors, raw answers are stored, then parsed into mentions and citations, rolled up into metrics and joined with analytics for attribution">
+<div class="pz-row">
+ <div class="pz-box"><b>Prompt library</b><span>Prompts, intents, clusters, locales</span></div>
+ <div class="pz-arrow" aria-hidden="true">→</div>
+ <div class="pz-box"><b>Collectors</b><span>One worker per engine: OpenAI, Gemini, Perplexity</span></div>
+ <div class="pz-arrow" aria-hidden="true">→</div>
+ <div class="pz-box"><b>Raw store</b><span>Every answer, model, timestamp and source list as JSON</span></div>
+</div>
+<div class="pz-row">
+ <div class="pz-box"><b>Parsers</b><span>Brand mentions, recommendation, position, citations</span></div>
+ <div class="pz-arrow" aria-hidden="true">→</div>
+ <div class="pz-box"><b>Metrics</b><span>Mention rate, recommendation rate, citation share</span></div>
+ <div class="pz-arrow" aria-hidden="true">→</div>
+ <div class="pz-box pz-accent"><b>Attribution</b><span>Joined with analytics, referrers and crawler logs</span></div>
+</div>
+<figcaption>Proposed architecture. Each layer can be rebuilt without touching the others, because the raw answers are kept.</figcaption>
+</figure>
+<div class="table-wrap"><table class="compare"><thead><tr><th>Layer</th><th>Suggested stack</th><th>Why</th></tr></thead><tbody><tr><td>Orchestration</td><td>Python workers on a job queue, scheduled by cron</td><td>Simple, cheap, easy to rate-limit per engine</td></tr><tr><td>Storage</td><td>PostgreSQL with JSONB for raw answers</td><td>One database for raw data, parsed rows and metrics</td></tr><tr><td>Embeddings</td><td>pgvector in the same database</td><td>Prompt clustering without a separate vector store</td></tr><tr><td>Parsing</td><td>Rules first, then an LLM judge with structured output</td><td>Rules are cheap and testable; the judge handles nuance</td></tr><tr><td>Reporting</td><td>SQL views feeding a lightweight dashboard</td><td>Researchers can query directly</td></tr></tbody></table></div>
+<div class="red-panel"><div class="panel-kicker">CTO rule</div><h3>Store the raw answer forever.</h3><p>Every metric in this roadmap is a parse of the raw text. If you only store the parsed result, every improvement to the parser starts from zero data.</p></div>
+</section>
+<section id="phases"><h2>What are the roadmap phases?</h2>
+<p>The roadmap has four phases, each with an exit test instead of a date. A phase ends when its numbers are stable and trusted enough to build on, not when a sprint finishes.</p>
+<div class="table-wrap"><table class="compare"><thead><tr><th>Phase</th><th>Goal</th><th>Deliverable</th><th>Exit test</th></tr></thead><tbody><tr><td>1. Visibility collector</td><td>Measure mentions and citations</td><td>Collectors for 3 engines, raw store, mention and citation parsers</td><td>Week-over-week mention rate moves less than the sampling noise on an unchanged prompt set</td></tr><tr><td>2. Prompt intelligence</td><td>Know which prompts matter</td><td>Prompt library, intent taxonomy, clustering</td><td>Every tracked prompt belongs to a labelled cluster that a marketer recognizes</td></tr><tr><td>3. Attribution</td><td>Connect AI discovery to visits</td><td>AI referral channel, crawler log parsing, joined reports</td><td>AI-referred sessions and conversions reported per engine, with known gaps written down</td></tr><tr><td>4. Conversational ads</td><td>Study ads inside AI answers</td><td>Ad exposure logging and lift analysis as a research module</td><td>A repeatable method, documented in a research note</td></tr></tbody></table></div>
+<p>Conversational advertising is now live in at least one major assistant: OpenAI announced it was <a href="https://openai.com/index/testing-ads-in-chatgpt/" rel="noopener" target="_blank">testing ads in ChatGPT</a>. That makes Phase 4 a research module worth planning for, but not one to build first, because ads are measured best on top of organic visibility data.</p>
+<aside class="note hint" role="note"><div class="note-label">Hint</div><p>Write each phase's exit test into the repository README before any code. It stops scope creep and gives the founder and CTO the same definition of done.</p></aside>
+</section>
+    <div class="grid bk-pn"><a class="card" href="visibility-collector/"><b>Phase 1: Visibility collector</b><span>Phase 1 of the Pagezii roadmap: collecting AI answers by API, storing raw responses, parsing brand mentions and citations, and metric SQL.</span><em>Next page →</em></a></div>
+  </main>
+
+  <aside class="right"><div data-cta="mvp"></div></aside>
+</div>
+
+<footer class="bk-foot"><p>© <span id="yr">2026</span> ShoutEx Digital Marketing and Development. The GitHub home of ShoutEx.</p>
+<nav aria-label="ShoutEx"><a href="https://shoutex.com">shoutex.com</a><a href="https://shoutex.com/contact">Contact</a></nav></footer>
+<script>
+document.getElementById("yr").textContent=new Date().getFullYear();
+document.querySelectorAll(".bk-play").forEach(function(b){b.addEventListener("click",function(){
+var f=document.createElement("iframe");f.src="https://www.youtube-nocookie.com/embed/"+b.dataset.yt+"?autoplay=1&rel=0";
+f.title="Video";f.allow="autoplay; encrypted-media; picture-in-picture";f.allowFullscreen=true;b.replaceWith(f);});});
+</script>
+<!-- Default Statcounter code for ShoutEx New
+https://www.shoutex.com -->
+<script type="text/javascript">
+var sc_project=13004247;
+var sc_invisible=1;
+var sc_security="862950b7";
+</script>
+<script type="text/javascript"
+src="https://www.statcounter.com/counter/counter.js"
+async></script>
+<noscript><div class="statcounter"><a title="website
+statistics" href="https://statcounter.com/"
+target="_blank"><img class="statcounter"
+src="https://c.statcounter.com/13004247/0/862950b7/1/"
+alt="website statistics"
+referrerPolicy="no-referrer-when-downgrade"></a></div></noscript>
+<!-- End of Statcounter Code -->
+</body>
+</html>

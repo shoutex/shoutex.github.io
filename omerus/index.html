@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en-CA">
+<head>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-P3GVGXD');</script>
+<!-- End Google Tag Manager -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Omerus: An iPad Calculator Built Around Gestures</title>
+<meta name="description" content="Omerus is a ShoutEx iPad calculator with gestures, reusable numbers, labelled lines, worksheets and PDF sharing. A short use case.">
+<link rel="canonical" href="https://shoutex.github.io/omerus/">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Omerus: An iPad Calculator Built Around Gestures">
+<meta property="og:description" content="Omerus is a ShoutEx iPad calculator with gestures, reusable numbers, labelled lines, worksheets and PDF sharing. A short use case.">
+<meta property="og:url" content="https://shoutex.github.io/omerus/">
+<meta name="twitter:card" content="summary">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://guides.shoutex.com/assets/guides.css">
+<link rel="stylesheet" href="assets/omerus.css">
+<script src="https://guides.shoutex.com/assets/includes.js" defer></script>
+<script type="application/ld+json">[{"@context": "https://schema.org", "@type": "Article", "headline": "Omerus: an iPad calculator built around gestures", "description": "Omerus is a ShoutEx iPad calculator with gestures, reusable numbers, labelled lines, worksheets and PDF sharing. A short use case.", "url": "https://shoutex.github.io/omerus/", "datePublished": "2026-10-17", "dateModified": "2026-10-17", "inLanguage": "en-CA", "author": {"@type": "Organization", "name": "ShoutEx", "url": "https://shoutex.com"}, "publisher": {"@type": "Organization", "name": "ShoutEx", "url": "https://shoutex.com", "logo": {"@type": "ImageObject", "url": "https://shoutex.com/shoutex/shoutex-logo.webp"}}, "isPartOf": {"@type": "WebSite", "name": "Omerus: an iPad calculator use case", "url": "https://shoutex.github.io/omerus/"}}, {"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Omerus", "item": "https://shoutex.github.io/omerus/"}]}]</script>
+</head>
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-P3GVGXD"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+<div data-include="header"></div>
+
+<div class="layout">
+  <aside class="left"><a class="home-link" href="https://guides.shoutex.com/"><span aria-hidden="true">←</span> All ShoutEx guides</a><nav class="quick" aria-label="Omerus guide">
+    <div class="quick-title">Omerus</div>
+    <a href="./" aria-current="page">Omerus overview</a>
+    <div class="quick-section"><div class="quick-section-title">On this page</div><a href="#what-is-omerus">What is Omerus?</a><a href="#how-it-works">How does the Omerus screen work?</a><a href="#technical-notes">What should a product owner know about building it?</a><a href="#marketing">How should a calculator app like Omerus be marketed?</a></div>
+  </nav></aside>
+
+  <main>
+    <div class="eyebrow">iPad productivity app use case</div>
+    <h1>Omerus: an iPad calculator built around gestures</h1>
+    <p class="dek">Omerus is a calculator ShoutEx built for the iPad. It uses the whole screen to show, store and reuse numbers, and it supports basic math through hand gestures. Here is what it does and what a product owner can learn from it.</p>
+    <div class="meta">ShoutEx Team · Updated October 2026 · One-page use case</div>
+    <div class="breadcrumb">Omerus use case</div>
+<section id="what-is-omerus"><h2>What is Omerus?</h2>
+<p>Omerus is an iPad calculator that performs basic operations through natural hand gestures. Every calculation is kept as a line, in the order it was made, and any number already on screen can be reused with a tap. Lines can be edited, deleted and given labels, worksheets keep projects apart, and a finished worksheet can be emailed as a PDF. ShoutEx launched it worldwide on the App Store.</p>
+<figure class="bk-video">
+<button class="bk-play" type="button" data-yt="Lj_djHLs3E8" aria-label="Play the Omerus video">
+<img src="https://i.ytimg.com/vi/Lj_djHLs3E8/hqdefault.jpg" alt="Omerus video: an iPad calculator that uses hand gestures and lists every calculation line by line" width="480" height="360" loading="lazy">
+<span class="bk-btn" aria-hidden="true"></span></button>
+<figcaption>The Omerus video. It loads from YouTube only when you press play.</figcaption>
+</figure>
+<p>"We developed Omerus to address a basic need in the market," said Zaki Usman, CEO of ShoutEx: a simple, capable calculator that uses the entire iPad screen.</p>
+</section>
+<section id="how-it-works"><h2>How does the Omerus screen work?</h2>
+<p>The design treats a calculation as a record, not a disappearing result. That one decision drives the rest of the feature set: lines need order, so they are chronological; records need context, so lines take labels; and records get reused, so earlier numbers are tappable.</p>
+<figure class="bk-device-fig">
+<div class="bk-ipad" role="img" aria-label="Illustrative mock-up of Omerus on an iPad: a worksheet of labelled calculation lines, a reused number highlighted and an Email PDF button">
+ <div class="bk-screen om-screen">
+  <div class="om-tabs"><span class="on">Q3 trip budget</span><span>Office move</span><span class="om-add">+</span></div>
+  <div class="om-tape"><div class="om-line"><span class="om-n">1</span><span class="om-lab">Flights</span><span class="om-ex">2 × 438</span><span class="om-res">= 876</span></div><div class="om-line"><span class="om-n">2</span><span class="om-lab">Hotel, 3 nights</span><span class="om-ex">3 × 189</span><span class="om-res">= 567</span></div><div class="om-line"><span class="om-n">3</span><span class="om-lab">Meals</span><span class="om-ex">4 × 55</span><span class="om-res">= 220</span></div>
+   <div class="om-line om-live"><span class="om-n">4</span><span class="om-lab">Total</span><span class="om-ex">876 + <mark>567</mark> + 220</span><span class="om-res">= 1,663</span></div>
+  </div>
+  <div class="om-pad"><svg viewBox="0 0 300 70" aria-hidden="true"><path d="M30 50 C 90 10, 150 10, 210 40 S 270 55, 280 20"/></svg><span>Gesture area</span></div>
+  <div class="om-bar"><span>Tap any earlier number to reuse it</span><b>Email PDF</b></div>
+ </div>
+</div>
+<figcaption>Illustrative mock-up with sample numbers: worksheets as tabs, labelled lines in order, a number tapped from line 2 and reused in line 4, and the PDF email option. It is not a screenshot of the app.</figcaption>
+</figure>
+<ul>
+<li><strong>Gestures.</strong> Basic operations are entered by hand gestures instead of only a keypad.</li>
+<li><strong>Tap to reuse.</strong> Any number shown earlier can be dropped into the current line.</li>
+<li><strong>Editable history.</strong> Lines stay in order and can be edited or deleted.</li>
+<li><strong>Labels and worksheets.</strong> Each line can carry a label, and each project gets its own worksheet.</li>
+<li><strong>PDF by email.</strong> A worksheet can be shared with colleagues as a PDF.</li>
+</ul>
+<p>Getting there meant leaving things out. Usman described the work as finding the right balance between UI elements. Our guide on <a href="https://guides.shoutex.com/mvp/mvp-features/">choosing MVP features</a> covers how to make those cuts on purpose.</p>
+</section>
+<section id="technical-notes"><h2>What should a product owner know about building it?</h2>
+<p>Three areas carry most of the engineering risk in an app like this.</p>
+<ul>
+<li><strong>Gesture conflicts.</strong> Custom gestures compete with system gestures and with scrolling the line list. Build them on <a href="https://developer.apple.com/documentation/uikit/uigesturerecognizer" rel="noopener" target="_blank">UIGestureRecognizer</a>, keep the gesture area separate from the scrolling area, and follow Apple's <a href="https://developer.apple.com/design/human-interface-guidelines/gestures" rel="noopener" target="_blank">Human Interface Guidelines on gestures</a>. The WWDC session <a href="https://developer.apple.com/videos/play/wwdc2018/803/" rel="noopener" target="_blank">Designing Fluid Interfaces</a> is the best primer on making gestures feel responsive.</li>
+<li><strong>Reused numbers.</strong> Decide whether a tapped number is a copy or a live reference. A reference means editing line 2 updates line 4, which is powerful but must be visible to the user. We would show the link and recalculate.</li>
+<li><strong>PDF and email.</strong> Render the worksheet with <a href="https://developer.apple.com/documentation/uikit/uigraphicspdfrenderer" rel="noopener" target="_blank">UIGraphicsPDFRenderer</a> and attach it with <a href="https://developer.apple.com/documentation/messageui/mfmailcomposeviewcontroller/addattachmentdata(_:mimetype:filename:)" rel="noopener" target="_blank">MFMailComposeViewController</a>. Fall back to the share sheet when no mail account is set up.</li>
+</ul>
+<aside class="note important" role="note"><div class="note-label">Important</div><p>Store worksheets locally with a clear save model. A calculator that loses a labelled worksheet loses the one thing that made it better than the default.</p></aside>
+</section>
+<section id="marketing"><h2>How should a calculator app like Omerus be marketed?</h2>
+<p>Market the worksheet, not the arithmetic. Every iPad now ships with a calculator: Apple added the Calculator app, with Math Notes, in <a href="https://www.apple.com/newsroom/2024/06/ipados-18-introduces-powerful-intelligence-features-and-apps-for-apple-pencil/" rel="noopener" target="_blank">iPadOS 18</a>. Omerus wins when the buyer needs labelled, saved, shareable calculations for work, such as budgets, quotes and expense checks, so that is where the message and the screenshots should point.</p>
+<p>The audience is business professionals, which puts Omerus in the productivity category. Our guides on <a href="https://guides.shoutex.com/mobile-apps/b2b-productivity-apps/">marketing B2B productivity apps</a> and <a href="https://guides.shoutex.com/mobile-apps/app-store-optimization/">App Store optimization</a> cover positioning against built-in tools and choosing search terms like "budget calculator" or "calculator with history" over the crowded word "calculator".</p>
+<div class="red-panel"><div class="panel-kicker">Founder rule</div><h3>Compete on the job, not the category.</h3><p>Nobody switches calculators for better arithmetic. They switch because they need to keep, label and share their numbers, so lead with that.</p></div>
+</section>
+    <div class="grid bk-pn"></div>
+  </main>
+
+  <aside class="right"><div data-cta="mob"></div></aside>
+</div>
+
+<footer class="bk-foot"><p>© <span id="yr">2026</span> ShoutEx Digital Marketing and Development. The GitHub home of ShoutEx.</p>
+<nav aria-label="ShoutEx"><a href="https://shoutex.com">shoutex.com</a><a href="https://shoutex.com/contact">Contact</a></nav></footer>
+<script>
+document.getElementById("yr").textContent=new Date().getFullYear();
+document.querySelectorAll(".bk-play").forEach(function(b){b.addEventListener("click",function(){
+var f=document.createElement("iframe");f.src="https://www.youtube-nocookie.com/embed/"+b.dataset.yt+"?autoplay=1&rel=0";
+f.title="Omerus video";f.allow="autoplay; encrypted-media; picture-in-picture";f.allowFullscreen=true;b.replaceWith(f);});});
+</script>
+<!-- Default Statcounter code for ShoutEx New
+https://www.shoutex.com -->
+<script type="text/javascript">
+var sc_project=13004247;
+var sc_invisible=1;
+var sc_security="862950b7";
+</script>
+<script type="text/javascript"
+src="https://www.statcounter.com/counter/counter.js"
+async></script>
+<noscript><div class="statcounter"><a title="website
+statistics" href="https://statcounter.com/"
+target="_blank"><img class="statcounter"
+src="https://c.statcounter.com/13004247/0/862950b7/1/"
+alt="website statistics"
+referrerPolicy="no-referrer-when-downgrade"></a></div></noscript>
+<!-- End of Statcounter Code -->
+</body>
+</html>
